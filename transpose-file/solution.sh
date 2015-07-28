@@ -13,5 +13,7 @@ for index in "${!array[@]}"
 do
     #echo "$index ${array[index]}"
     #awk -v i=$((1+index))  -v wc=$((0+wc)) '{if (NR==wc) space="\n"; else space=" "} {printf "%s%s",$i,space}' file.txt
-    awk -v i=$((1+index)) '{printf "%s ",$i}' file.txt | sed 's/^[[:space:]]*//'
+    #awk -v i=$((1+index)) '{ if(1==NR){printf "%s",$i} else{printf " %s",$i} }END{printf "\n"}' file.txt
+    #awk -v i=$((1+index))  '{if (NR==1) space=""; else space=" "} {printf "%s%s",space,$i} END {printf "\n"}' file.txt
+    awk '{if (NR==1) space=""; else space=" "} {printf "%s%s",space,$'$((1+index))'} END {printf "\n"}' file.txt
 done
