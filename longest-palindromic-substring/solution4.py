@@ -20,16 +20,18 @@ class Solution:
         if not s[1:]:
             return s
 
+        longest = (0, 1) #start,length
         t = {}
         for idx in range(len(s)):
             t.setdefault(idx, {idx: (1, True)})
         if s[0] == s[1]:
             t[1][0] = (2, True)
             t[1].pop(1)
+            longest = (0, 2)
 
         for idx, e in enumerate(s[2:]):
-            print
-            print idx, e
+            #print
+            #print idx, e
             idx += 2
             for start, (length, is_successive) in t[idx-1].items():
                 if start-1>=0 and s[start-1] == e:
@@ -38,21 +40,21 @@ class Solution:
                         t[idx].pop(idx)
                     else:
                         t[idx][start-1] = (length+2, False)
+                    if length+2 > longest[1]:
+                        longest = (start-1,length+2)
+
                 elif is_successive and s[start] == e:
                     t[idx][start] = (length+1, True)
                     t[idx].pop(idx)
+                    if length+1 > longest[1]:
+                        longest = (start,length+1)
 
-            for end, v in t.items():
-                for start, (length, is_successive) in v.items():
-                    print start, end, s[start:end+1], is_successive
 
-        longest = (0, None, None)
-        for end, v in t.items():
-            for start, (length, is_successive) in v.items():
-                if length > longest[0]:
-                    longest = (length, start, end)
+            #for end, v in t.items():
+                #for start, (length, is_successive) in v.items():
+                    #print start, end, s[start:end+1], is_successive
 
-        return s[longest[1]:longest[2]+1]
+        return s[longest[0]:longest[0]+longest[1]]
 
 
 class TestSolution(unittest.TestCase):
@@ -64,7 +66,6 @@ class TestSolution(unittest.TestCase):
         expect = string
         rst = s.longestPalindrome(string)
         self.assertEqual(rst,expect)
-        return
 
         for i in range(0,10):
             string = "c" * i
