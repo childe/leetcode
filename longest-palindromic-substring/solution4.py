@@ -23,29 +23,22 @@ class Solution:
         longest = (0, 1) #start,length
         t = {}
         for idx in range(len(s)):
-            t.setdefault(idx, {idx: (1, True)})
+            t.setdefault(idx, [(idx,1, True)]) #start, length, is_successive
         if s[0] == s[1]:
-            t[1][0] = (2, True)
-            t[1].pop(1)
+            t[1] = [(0, 2, True)]
             longest = (0, 2)
 
         for idx, e in enumerate(s[2:]):
             #print
             #print idx, e
             idx += 2
-            for start, (length, is_successive) in t[idx-1].items():
+            for start, length, is_successive in t[idx-1]:
                 if start-1>=0 and s[start-1] == e:
-                    if is_successive and s[start] == e:
-                        t[idx][start-1] = (length+2, True)
-                        t[idx].pop(idx)
-                    else:
-                        t[idx][start-1] = (length+2, False)
+                    t[idx].append( (start-1,length+2, False) )
                     if length+2 > longest[1]:
                         longest = (start-1,length+2)
-
                 elif is_successive and s[start] == e:
-                    t[idx][start] = (length+1, True)
-                    t[idx].pop(idx)
+                    t[idx] = [(start,length+1, True)]
                     if length+1 > longest[1]:
                         longest = (start,length+1)
 
