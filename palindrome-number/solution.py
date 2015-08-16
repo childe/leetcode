@@ -39,8 +39,8 @@ class Solution:
 
         i = 0
         while(i<=(n-1)/2):
-            righti = (x-x%(10**i))/10**i%10
-            lefti = (x-x%(10**(n-i-1)))/10**(n-i-1)%10
+            righti = x/(10**i)%10
+            lefti = x/(10**(n-i-1))%10
             if lefti != righti:
                 return False
             i += 1
