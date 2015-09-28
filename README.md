@@ -13,4 +13,4 @@
 |11|[Container With Most Water](https://leetcode.com/problems/container-with-most-water/)|[Python](https://github.com/childe/leetcode/tree/master/container-with-most-water/solution.py)|
 |12|[Integer to Roman](https://leetcode.com/problems/integer-to-roman/)|[Python](https://github.com/childe/leetcode/blob/master/integer-to-roman/solution.py)|
 |13|[Roman to Integer](https://leetcode.com/problems/roman-to-integer/)|[Python](https://github.com/childe/leetcode/blob/master/roman-to-integer/solution.py)|
-|14|[Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/)|[Python]()|
+|14|[Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/)|[Python](https://github.com/childe/leetcode/blob/master/longest-common-prefix/solution.py)|
