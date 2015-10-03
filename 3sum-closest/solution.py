@@ -68,7 +68,34 @@ class Solution(object):
         :rtype: int
         """
         nums.sort()
-        return self._threeSumClosest(nums, 3, target)
+
+        length = len(nums)
+
+        candidates = set()
+
+        for idx, num in enumerate(nums):
+            nums_without_num = nums[:idx]+nums[idx+1:]
+
+            new_target = target-num
+            i = 0
+            j = length-2
+
+            while(i < j):
+                s = nums_without_num[i]+nums_without_num[j]
+                if s == new_target:
+                    return target
+                candidates.add(num+s)
+                if s < new_target:
+                    i += 1
+                else:
+                    j -= 1
+
+        closest = candidates.pop()
+        for c in candidates:
+            if abs(c-target) < abs(closest-target):
+                closest = c
+
+        return closest
 
 
 class TestSolution(unittest.TestCase):
@@ -82,6 +109,14 @@ class TestSolution(unittest.TestCase):
 
     def test_threeSumClosest(self):
         s = Solution()
+        import random
+        nums = [random.randint(-10000, 10000)
+                for e in range(100)]
+        self.assertEqual(0, s.threeSumClosest(nums, 0))
+
+        nums = [random.randint(-10000, 10000)
+                for e in range(1000)]
+        self.assertEqual(0, s.threeSumClosest(nums, 0))
 
         nums = [1, 2, 3, 4]
         target = 6
