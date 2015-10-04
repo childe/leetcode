@@ -15,3 +15,5 @@
 |13|[Roman to Integer](https://leetcode.com/problems/roman-to-integer/)|[Python](https://github.com/childe/leetcode/blob/master/roman-to-integer/solution.py)|
 |14|[Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/)|[Python](https://github.com/childe/leetcode/blob/master/longest-common-prefix/solution.py)|
 |15|[3Sum](https://leetcode.com/problems/3sum/)|[Python](https://github.com/childe/leetcode/blob/master/3sum/solution.py)|
+|16|[3Sum Closest](https://leetcode.com/problems/3sum-closest/)|[Python](https://github.com/childe/leetcode/tree/master/3sum-closest/solution.py)|
+|17|[Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)|[Python](https://github.com/childe/leetcode/tree/master/letter-combinations-of-a-phone-number/solution.py)|
