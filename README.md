@@ -17,5 +17,5 @@
 |15|[3Sum](https://leetcode.com/problems/3sum/)|[Python](https://github.com/childe/leetcode/blob/master/3sum/solution.py)|
 |16|[3Sum Closest](https://leetcode.com/problems/3sum-closest/)|[Python](https://github.com/childe/leetcode/tree/master/3sum-closest/solution.py)|
 |17|[Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)|[Python](https://github.com/childe/leetcode/tree/master/letter-combinations-of-a-phone-number/solution.py)|
-|169|[Word Pattern](https://leetcode.com/problems/majority-element/)|[Python](https://github.com/childe/leetcode/tree/master/majority-element/solution.py)|
+|169|[majority element](https://leetcode.com/problems/majority-element/)|[Python](https://github.com/childe/leetcode/tree/master/majority-element/solution.py)|
 |290|[Word Pattern](https://leetcode.com/problems/word-pattern/)|[Python](https://github.com/childe/leetcode/tree/master/word-Pattern/solution.py)|
