@@ -86,7 +86,7 @@ class Solution(object):
 
         return rst
 
-    def bulbSwitch(self, n):
+    def bulbSwitch3(self, n):
         """
         :type n: int
         :rtype: int
@@ -108,7 +108,7 @@ class Solution(object):
             while(j < magic_number):
                 magic_cache[i] = magic_cache[i] | (magic_cache[i] << j)
                 j <<= 1
-            magic_cache[i] = magic_cache[i]
+            #magic_cache[i] = magic_cache[i] & mask_num
 
         #for i in range(1, 1+magic_number):
             #print i, bin(magic_cache[i])
@@ -152,13 +152,28 @@ class Solution(object):
         return rst
 
 
+    def bulbSwitch(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n <= 0:
+            return 0
+
+        import math
+        return int(math.floor(math.sqrt(n)))
+
 class TestSolution(unittest.TestCase):
 
     def test_bulbSwitch(self):
+        import math
+
         s = Solution()
 
         for i in range(-100, 1000):
             self.assertEqual(s.bulbSwitch(i), s.bulbSwitch2(i))
+        for i in range(1, 1000):
+            self.assertEqual(s.bulbSwitch(i), math.floor(math.sqrt(i)))
 
         my_answer = s.bulbSwitch(0)
         self.assertEqual(0, my_answer)
