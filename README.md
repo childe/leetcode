@@ -21,3 +21,4 @@
 |153|[Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)|[Python](https://github.com/childe/leetcode/blob/master/find-minimum-in-rotated-sorted-arrays/solution.py)|
 |169|[majority element](https://leetcode.com/problems/majority-element/)|[Python](https://github.com/childe/leetcode/blob/master/majority-element/solution.py)|
 |290|[Word Pattern](https://leetcode.com/problems/word-pattern/)|[Python](https://github.com/childe/leetcode/blob/master/word-pattern/solution.py)|
+|319|[Bulb Switcher](https://leetcode.com/problems/bulb-switcher/)|[Python](https://github.com/childe/leetcode/blob/master/bulb-switcher/solution.py)|
