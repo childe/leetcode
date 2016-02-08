@@ -22,3 +22,4 @@
 |169|[majority element](https://leetcode.com/problems/majority-element/)|[Python](https://github.com/childe/leetcode/blob/master/majority-element/solution.py)|
 |290|[Word Pattern](https://leetcode.com/problems/word-pattern/)|[Python](https://github.com/childe/leetcode/blob/master/word-pattern/solution.py)|
 |319|[Bulb Switcher](https://leetcode.com/problems/bulb-switcher/)|[Python](https://github.com/childe/leetcode/blob/master/bulb-switcher/solution.py)|
+|330|[patching-array](https://leetcode.com/problems/patching-array/)|[Python](https://github.com/childe/leetcode/blob/master/patching-array/solution.py)|
