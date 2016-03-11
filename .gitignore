@@ -1,3 +1,7 @@
 .ropeproject
 *.pyc
 *.swo
+.idea/
+out/
+target/
+leetcode.iml
