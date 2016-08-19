@@ -178,8 +178,9 @@ class TestSolution(unittest.TestCase):
         nodelists = []
         for i in range(10000):
             nodelists.append(ListNode(random.randint(1,100)))
+        rst = sorted(self.NodeLists2List(*nodelists))
         myrst = s.mergeKLists(nodelists)
-        # self.assertEqual(self.NodeList2List(rst), self.NodeLists2List(*nodelists))
+        self.assertEqual(self.NodeList2List(myrst), rst)
 
 
 if __name__ == '__main__':
