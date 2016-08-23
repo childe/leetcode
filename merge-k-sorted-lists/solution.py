@@ -26,7 +26,6 @@ class Solution(object):
             head = head.next
         print
 
-
     def merge2Lists(self, lista, listb):
         """
         :type lista: ListNode
@@ -63,7 +62,6 @@ class Solution(object):
                 if ob is None:
                     return head
 
-
     def mergeKLists(self, lists):
         """
         :type lists: List[ListNode]
@@ -72,50 +70,17 @@ class Solution(object):
         if not lists:
             return
 
-        for i, l in enumerate(lists):
-            if l is not None:
-                head = l
-                rest = lists[i+1:]
-                break
-        else:
-            return None
-        for current_process_node in rest:
-            # 对后续每一个链表(1), 合并到之前已经合并过的链表中(0)
-            # print "\n###\nlist 0 is",
-            # self.printList(head)
-            # print "now process",
-            # self.printList(current_process_node)
-            # print
-            p = None
-            o = head
-            while current_process_node is not None:
-                # print "current_process_node is", current_process_node.val
-                while o is not None:
-                    # print p.val if p else "none", o.val,
-                    # current_process_node.val
-                    if current_process_node.val > o.val:
-                        # 链表1的当前节点比链表0中的节点要大, 继续遍历链表0
-                        p = o
-                        o = o.next
-                        continue
-                    # 链表1的当前节点, 比链表0中的节点要小, 插入链表0, 并继续遍历链表1
-                    n = current_process_node.next
-                    current_process_node.next = o
-                    if p is None:
-                        head = current_process_node
-                    else:
-                        p.next = current_process_node
-                    p = current_process_node
-                    current_process_node = n
-                    if n is None:
-                        # 链表1已经遍历到了最后
-                        break
-                else:
-                    # 没有break, 说明链表0已经遍历到了最后,如果链表1中还有元素, 插入到链表0最后
-                    p.next = current_process_node
-                    current_process_node = None  # 已经没必要再遍历链表1了
+        if len(lists) == 2:
+            return self.merge2Lists(*lists)
+        if len(lists) == 1:
+            return lists[0]
 
-        return head
+        mid = (len(lists)-1)/2
+        return self.merge2Lists(
+            self.mergeKLists(
+                lists[:mid]),
+            self.mergeKLists(
+                lists[mid:]))
 
 
 class TestSolution(unittest.TestCase):
@@ -162,25 +127,32 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(rst, self.NodeList2List(myrst))
 
         l1 = self.createList(1)
-        l2 = self.createList(1,1,1,1)
+        l2 = self.createList(1, 1, 1, 1)
         rst = sorted(self.NodeLists2List(l1, l2))
         myrst = s.merge2Lists(l1, l2)
         self.assertEqual(rst, self.NodeList2List(myrst))
 
         import random
         for i in range(100):
-            l1 = self.createList(*sorted([random.randint(1,100) for i in range(random.randint(1,100))]))
-            l2 = self.createList(*sorted([random.randint(1,100) for i in range(random.randint(1,100))]))
+            l1 = self.createList(
+                *
+                sorted(
+                    [random.randint(1, 100)
+                     for i in range(random.randint(1, 100))]))
+            l2 = self.createList(
+                *
+                sorted(
+                    [random.randint(1, 100)
+                     for i in range(random.randint(1, 100))]))
             # print self.NodeList2List(l1)
             # print self.NodeList2List(l2)
 
-            rst = sorted(self.NodeLists2List(l1,l2))
+            rst = sorted(self.NodeLists2List(l1, l2))
             # print rst
-            myrst = s.merge2Lists(l1,l2)
+            myrst = s.merge2Lists(l1, l2)
             self.assertEqual(self.NodeList2List(myrst), rst)
 
-
-    def _testMergeKLists(self):
+    def testMergeKLists(self):
         s = Solution()
 
         l1 = self.createList()
@@ -249,7 +221,7 @@ class TestSolution(unittest.TestCase):
 
         import random
         nodelists = []
-        for i in range(100):
+        for i in range(10000):
             nodelists.append(ListNode(random.randint(1, 100)))
         rst = sorted(self.NodeLists2List(*nodelists))
         myrst = s.mergeKLists(nodelists)
