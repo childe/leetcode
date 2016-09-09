@@ -17,6 +17,13 @@
 |15|[3Sum](https://leetcode.com/problems/3sum/)|[Python](https://github.com/childe/leetcode/blob/master/3sum/solution.py)|
 |16|[3Sum Closest](https://leetcode.com/problems/3sum-closest/)|[Python](https://github.com/childe/leetcode/blob/master/3sum-closest/solution.py)|
 |17|[Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)|[Python](https://github.com/childe/leetcode/blob/master/letter-combinations-of-a-phone-number/solution.py)|
+|20|[valid-parentheses](https://leetcode.com/problems/valid-parentheses/)|[Python](https://github.com/childe/leetcode/blob/master/valid-parentheses/solution.py)|
+|20|[merge-two-sorted-lists](https://leetcode.com/problems/merge-two-sorted-lists/)|[Python](https://github.com/childe/leetcode/blob/master/merge_two_sorted_lists/Solution.py)|
+|22|[generate-parentheses](https://leetcode.com/problems/generate-parentheses/)|[Python](https://github.com/childe/leetcode/blob/master/generate-parentheses/solution.py)|
+|23|[merge-k-sorted-lists](https://leetcode.com/problems/merge-k-sorted-lists/)|[Python](https://github.com/childe/leetcode/blob/master/merge-k-sorted-lists/solution.py)|
+|23|[swap-nodes-in-pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)|[Python](https://github.com/childe/leetcode/blob/master/swap_nodes_in_pairs/Solution.py)|
+|25|[reverse-nodes-in-k-group](https://leetcode.com/problems/reverse-nodes-in-k-group/)|[Python](https://github.com/childe/leetcode/blob/master/reverse-nodes-in-k-group/solution.py)|
+|27|[remove-element](https://leetcode.com/problems/remove-element/)|[Python](https://github.com/childe/leetcode/blob/master/remove-element/solution.py)|
 |112|[Path Sum](https://leetcode.com/problems/path-sum/)|[Python](https://github.com/childe/leetcode/blob/master/path-sum/solution.py)|
 |153|[Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)|[Python](https://github.com/childe/leetcode/blob/master/find-minimum-in-rotated-sorted-arrays/solution.py)|
 |169|[majority element](https://leetcode.com/problems/majority-element/)|[Python](https://github.com/childe/leetcode/blob/master/majority-element/solution.py)|
