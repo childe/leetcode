@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
+https://leetcode.com/problems/divide-two-integers/#/description
+
 Divide two integers without using multiplication, division and mod operator.
 
 If it is overflow, return MAX_INT.
@@ -30,13 +32,15 @@ class Solution(object):
         16
         >>> s.divide(100000000,1)
         100000000
+        >>> s.divide(100000000000000000000000,1)
+        2147483647
+        >>> s.divide(-100000000000000000000000,1)
+        -2147483648
         >>> s.divide(10,-3)
         -3
         >>> s.divide(-10,3)
         -3
         """
-
-        MAX_INT = 0xffffffff >> 1
 
         rst = 0
         factor = 1
@@ -47,31 +51,16 @@ class Solution(object):
             factor = -factor
             divisor = -divisor
 
-        while True:
-            if dividend == divisor:
-                result = rst + 1
-                if result >  MAX_INT:
-                    return MAX_INT
-                return result * factor
-            if dividend < divisor:
-                result = rst
-                if result >  MAX_INT:
-                    return MAX_INT
-                return result * factor
-
-            bottom = 1
-            value = divisor
-            while(value < dividend):
-                value = divisor << bottom
-
-                if value == dividend:
-                    result = rst + (1 << bottom)
-                    if result >  MAX_INT:
-                        return MAX_INT
-                    return result * factor
-                elif value > dividend:
-                    bottom >>= 1
-                    rst += (1 << bottom)
-                    dividend -= (divisor << bottom)
-                else:
-                    bottom <<= 1
+        c = 0
+        rest = dividend
+        b = divisor
+        while rest >= divisor:
+            c += 1
+            b = divisor << c
+            if b > rest:
+                rst += 1 << (c-1)
+                c = 0
+                rest -= b >> 1
+                b = divisor
+        rst = rst*factor
+        return min(2147483647, max(-2147483648, rst))
