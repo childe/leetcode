@@ -20,8 +20,8 @@ class Solution(object):
         >>> s = Solution()
         >>> s.divide(10,3)
         3
-        >>> s.divide(100,3)
-        33
+        >>> s.divide(9,3)
+        3
         >>> s.divide(99,3)
         33
         >>> s.divide(99,10)
@@ -43,24 +43,19 @@ class Solution(object):
         """
 
         rst = 0
-        factor = 1
+        factor = (dividend > 0) is (divisor > 0)
         if dividend < 0:
-            factor = -factor
             dividend = -dividend
         if divisor < 0:
-            factor = -factor
             divisor = -divisor
 
-        c = 0
-        rest = dividend
-        b = divisor
-        while rest >= divisor:
-            c += 1
-            b = divisor << c
-            if b > rest:
-                rst += 1 << (c-1)
-                c = 0
-                rest -= b >> 1
-                b = divisor
-        rst = rst*factor
+        while dividend >= divisor:
+            c, b = 0, divisor
+            while dividend >= b:
+                c += 1
+                b <<= 1
+            rst += 1 << (c-1)
+            dividend -= b >> 1
+        if not factor:
+            rst = -rst
         return min(2147483647, max(-2147483648, rst))
