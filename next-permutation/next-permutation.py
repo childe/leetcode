@@ -23,14 +23,15 @@ outputs are in the right-hand column.
 
 
 class Solution(object):
-    def _isMaxPermutation(self, nums):
+    def _isMaxPermutation(self, nums, idx=0):
         """
         :type nums: List[int]
         :rtype: bool
         """
-        if len(nums) <= 1:
+        idx = (len(nums) + idx) % len(nums)
+        if idx+1 >= len(nums):
             return True
-        return nums[0] >= nums[1]
+        return nums[idx] >= nums[idx+1]
 
     def _reverse(self, nums, idx):
         """
@@ -76,7 +77,6 @@ class Solution(object):
         """
         idx = (len(nums) + idx) % len(nums)
         # assert(self._isMaxPermutation(nums[idx+1:]))
-        t = nums[idx]
         for i in range(len(nums)-1, idx, -1):
             if nums[idx] < nums[i]:
                 nums[i], nums[idx] = nums[idx], nums[i]
@@ -91,7 +91,7 @@ class Solution(object):
         :rtype: void Do not return anything, modify nums in-place instead.
         """
         for i in range(1, 1+len(nums)):
-            if self._isMaxPermutation(nums[-i:]):
+            if self._isMaxPermutation(nums, -i):
                 continue
             else:
                 return self._partNextPermutation(nums, -i)
