@@ -41,9 +41,20 @@ class Solution(object):
         8
         """
         stepList = [0] * len(nums)
-        for i, numA in enumerate(nums[:-1]):
-            for j, numB in enumerate(nums[i+1:i+numA+1]):
-                t = stepList[i]+1
-                stepList[i+j+1] = min(stepList[i+j+1], t) if stepList[i+j+1] != 0 else t
+        stepList[1:1+nums[0]] = [1] * (1+nums[0])
+        lastLargetestPoint = 0
+        for i, num in enumerate(nums[:-1]):
+            # print i, num, nums[lastLargetestPoint], lastLargetestPoint
+            if num <= nums[lastLargetestPoint] - (i-lastLargetestPoint):
+                continue
+            stepList[1+lastLargetestPoint+nums[lastLargetestPoint]:
+                     1+i+num] = [1+stepList[i]] * (i+num-lastLargetestPoint-nums[lastLargetestPoint])
+            lastLargetestPoint = i
+            # print stepList
 
-        return stepList[-1]
+        return stepList[len(nums)-1]
+
+
+if __name__ == '__main__':
+    s = Solution()
+    print s.jump([2, 3, 1, 1, 4])
