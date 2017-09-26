@@ -24,25 +24,6 @@ A solution set is:
 
 
 class Solution(object):
-    def combinationSum2Sorted(self, candidates, target):
-        # print candidates, target
-        if target == 0:
-            return [()]
-        if candidates == [] or target <= 0:
-            return []
-        if candidates[0] > target:
-            return self.combinationSum2Sorted(candidates[1:], target)
-
-        s = set()
-        r1 = self.combinationSum2Sorted(candidates[1:], target)
-        # print "r1", r1
-        s.update(r1)
-        r2 = self.combinationSum2Sorted(candidates[1:], target-candidates[0])
-        # print "r2", r2
-        s.update({(candidates[0],) + e for e in r2})
-
-        return list({tuple(sorted(e)) for e in s})
-
     def combinationSum2(self, candidates, target):
         """
         :type candidates: List[int]
@@ -50,83 +31,97 @@ class Solution(object):
         :rtype: List[List[int]]
         >>> s = Solution()
         >>> s.combinationSum2([10, 1, 2, 7, 6, 1, 5], 8)
-        [(1, 1, 6), (2, 6), (1, 2, 5), (1, 7)]
+        [(2, 6), (1, 1, 6), (1, 2, 5), (1, 7)]
         >>> s.combinationSum2([1], 1)
         [(1,)]
         """
         candidates.sort()
-        candidates.reverse()
         for i, e in enumerate(candidates):
-            if e <= target:
-                candidates = candidates[i:]
+            if e > target:
+                candidates = candidates[:i]
                 break
 
         if candidates == []:
             return []
 
-        return self.combinationSum2Sorted(candidates, target)
+        candidates.reverse()
+
+        rst = set()
+        stack = [((), 0, target)]  # (pre parts, start, target)
+        while stack:
+            # print stack
+            pre_parts, start, target = stack.pop()
+            # print pre_parts, start, target, candidates[start:]
+            if target == 0:
+                rst.add(pre_parts)
+                continue
+            if start >= len(candidates):
+                continue
+            if target < 0:
+                continue
+            stack.append((pre_parts, start+1, target))
+            stack.append((pre_parts+(candidates[start],), start+1, target-candidates[start]))
+
+        return list(rst)
 
 
 def f():
     s = Solution()
-    s.combinationSum2([24,
-                       31,
-                       6,
-                       19,
-                       18,
-                       30,
-                       7,
-                       33,
-                       10,
-                       10,
-                       10,
-                       15,
-                       21,
-                       33,
-                       31,
-                       10,
-                       9,
-                       15,
-                       22,
-                       6,
-                       13,
+    s.combinationSum2([13,
+                       23,
+                       25,
                        11,
-                       24,
-                       17,
-                       28,
-                       33,
+                       7,
                        26,
-                       9,
-                       24,
-                       11,
-                       28,
                        14,
-                       29,
-                       29,
-                       28,
+                       11,
+                       27,
+                       27,
+                       26,
                        12,
+                       8,
+                       20,
+                       22,
+                       34,
+                       27,
                        17,
+                       5,
+                       26,
+                       31,
+                       11,
+                       16,
+                       27,
+                       13,
+                       20,
+                       29,
+                       18,
+                       7,
+                       14,
+                       13,
+                       15,
+                       25,
+                       25,
+                       21,
+                       27,
+                       16,
                        22,
                        33,
-                       14,
-                       19,
                        8,
+                       15,
                        25,
-                       27,
-                       7,
-                       13,
-                       24,
-                       33,
-                       23,
-                       12,
-                       34,
-                       24,
+                       16,
+                       18,
                        10,
-                       23,
-                       28,
                        25,
-                       22],
-                      26)
+                       9,
+                       24,
+                       7,
+                       32,
+                       15,
+                       26,
+                       30,
+                       19],
+                      25)
 
 
 if __name__ == '__main__':
