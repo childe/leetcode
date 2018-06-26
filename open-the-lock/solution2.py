@@ -1,4 +1,6 @@
 from collections import deque
+
+
 class Solution(object):
     def openLock(self, deadends, target):
         """
@@ -19,7 +21,7 @@ class Solution(object):
             for i in range(0, 4):
                 for j in [-1, 1]:
                     # print j
-                    next_status = current_status[0:i] + str((int(current_status[i]) - int("0") + j)%10) + current_status[i+1:]
+                    next_status = current_status[0:i] + str((int(current_status[i]) - int("0") + j) % 10) + current_status[i+1:]
                     if next_status in visited:
                         continue
                     else:
@@ -30,15 +32,8 @@ class Solution(object):
 
         return -1
 
-if __name__ == '__main__':
-    # s = Solution()
-    # print s.openLock(["0201","0101","0102","1212","2002"], target = "0202")
 
-    # print s.openLock(deadends = ["8888"], target = "0009")
-
-    # print s.openLock(deadends = ["8887","8889","8878","8898","8788","8988","7888","9888"], target = "8888")
-
-    # print s.openLock(deadends = ["0000"], target = "8888")
+def main():
     import time
     print time.time()
     s = Solution()
@@ -49,3 +44,7 @@ if __name__ == '__main__':
         deadends, target = l[:-1], l[-1]
         print s.openLock(deadends, target)
     print time.time()
+
+
+if __name__ == '__main__':
+    main()

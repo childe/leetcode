@@ -129,8 +129,7 @@ class Solution(object):
 
         return -1
 
-
-if __name__ == '__main__':
+def main():
     import time
     print time.time()
     s = Solution()
@@ -141,3 +140,6 @@ if __name__ == '__main__':
         deadends, target = l[:-1], l[-1]
         print s.openLock(deadends, target)
     print time.time()
+
+if __name__ == '__main__':
+    main()
