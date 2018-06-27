@@ -11,12 +11,12 @@ class Solution(object):
         initial = "0000"
         if initial in deadends:
             return -1
-        status = deque([(initial, 0)])
+        status = [(initial, 0)]
         visited = set(deadends)
         visited.add(initial)
 
         while status:
-            current_status, step = status.popleft()
+            current_status, step = status.pop()
             # print current_status, step
             for i in range(0, 4):
                 for j in [-1, 1]:
@@ -27,21 +27,16 @@ class Solution(object):
                     else:
                         if next_status == target:
                             return step + 1
-                        status.append([next_status, step+1])
+                        status.insert(0, [next_status, step+1])
                         visited.add(next_status)
 
         return -1
 
 
 def main():
-    s = Solution()
     import time
     print time.time()
-    print s.openLock(deadends = ["8887","8889","8878","8898","8788","8988","7888","9888"], target = "8888")
-    print time.time()
-    return
-
-    print time.time()
+    s = Solution()
     for l in open('testcase.txt'):
         if not l.strip():
             continue
