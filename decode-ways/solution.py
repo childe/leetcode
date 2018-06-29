@@ -48,7 +48,12 @@ class Solution(object):
         0
         >>> s.numDecodings('2685')
         2
+        >>> s.numDecodings('4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948')
+        589824
+        >>> s.numDecodings('227')
+        2
         """
+
         if s == '':
             return 0
         if s[0] == '0':
@@ -59,9 +64,33 @@ class Solution(object):
             if s[1] == '0':
                 return 0 if s[0] > '2' else 1
             return 2 if int(s) <= 26 else 1
-        if int(s[:2]) <= 26:
-            return self.numDecodings(s[1:]) + self.numDecodings(s[2:])
-        return self.numDecodings(s[1:])
+
+        # init
+        a = [0] * len(s)
+        a[0] = 1
+        a[1] = self.numDecodings(s[:2])
+
+        #
+        for i, e in enumerate(s):
+            if i < 2:
+                continue
+            if e == '0':
+                if s[i-1] == '0' or s[i-1] > '2':
+                    return 0
+                a[i] = a[i-2]
+                continue
+
+            if s[i-1] == '0':
+                a[i] = a[i-1]
+                continue
+
+            if int(s[i-1:i+1]) > 26:
+                a[i] = a[i-1]
+            else:
+                a[i] = a[i-1]+a[i-2]
+
+        return a[-1]
+
 
 if __name__ == '__main__':
     import sys
