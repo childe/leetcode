@@ -33,45 +33,27 @@ Same with other integers chosen by the first player, the second player will alwa
 
 
 class Solution(object):
-    def canWin2(self, myPool, rivalPool, total):
-        """
-        >>> s = Solution()
-        >>> s.canWin2([1,3], [2,4], 10)
-        False
-        >>> s.canWin2([1], [2], 7)
-        True
-        """
-        # print myPool, rivalPool, total
-        safeA = [None] * total
-        safeB = [None] * total
-        for n in range(1, total):
-            if n <= max(rivalPool):
-                safeA[n] = False
-                continue
-            if n <= max(myPool):
-                safeB[n] = False
-                continue
-            safeA[n] = not any(safeB[n-i] for i in myPool if n-i > 0)
-            safeB[n] = not any(safeA[n-i] for i in rivalPool if n-i > 0)
-
-        return any(safeA[-max(myPool):])
-
-    def canWin(self, myPool, rivalPool, restPool, total):
-        # print myPool, rivalPool, restPool, total
-        if total <= max(myPool+restPool):
+    def canWin(self, restPool, total):
+        if total <= max(restPool):
             return True
 
-        if restPool == []:
-            return self.canWin2(myPool, rivalPool, total)
+        r = self.visited.get(restPool)
+        if r is not None:
+            return r
 
         for i, e in enumerate(restPool):
-            if not self.canWin(rivalPool, myPool+[e], restPool[:i]+restPool[i+1:], total-e):
+            t = tuple(restPool[:i]+restPool[i+1:])
+            r = self.visited.get(t)
+            if r is False:
+                self.visited[restPool] = True
                 return True
+            if r is True:
+                continue
 
-        for i, e in enumerate(myPool):
-            if not self.canWin(rivalPool, myPool, restPool, total-e):
+            if not self.canWin(t, total-e):
+                self.visited[restPool] = True
                 return True
-
+        self.visited[restPool] = False
         return False
 
     def canIWin(self, maxChoosableInteger, desiredTotal):
@@ -81,7 +63,7 @@ class Solution(object):
         :rtype: bool
         >>> s = Solution()
         >>> s.canIWin(2, 10)
-        True
+        False
         >>> s.canIWin(10, 20)
         True
         >>> s.canIWin(10, 11)
@@ -90,27 +72,26 @@ class Solution(object):
         False
         >>> s.canIWin(4, 6)
         True
+        >>> s.canIWin(18, 79)
+        True
+        >>> s.canIWin(20, 210)
+        False
+        >>> s.canIWin(20, 207)
+        False
+        >>> s.canIWin(19, 190)
+        True
         """
-        return self.canWin([], [], range(1, 1+maxChoosableInteger), desiredTotal)
+        if maxChoosableInteger*(1+maxChoosableInteger)/2 < desiredTotal:
+            return False
+        if maxChoosableInteger*(1+maxChoosableInteger)/2 == desiredTotal:
+            return maxChoosableInteger % 2 == 1
+        self.visited = {}
+        return self.canWin(tuple(range(maxChoosableInteger, 0 , -1)), desiredTotal)
 
 
 def main():
     s = Solution()
-    # print s.canWin([], [], range(1, 11), 40)
-
-    # restPool = range(1, 11)
-
-    # for i, e in enumerate(restPool):
-    # print e
-    # print s.canWin([], [e], restPool[:i]+restPool[i+1:], 40-e)
-
-    # print s.canWin([], [1], range(2, 11), 39)
-    print s.canWin([1], [2], range(3, 11), 37)
-
-    restPool= range(3, 11)
-    for i, e in enumerate(restPool):
-        print e
-        print s.canWin([2], [1, e], restPool[:i]+restPool[i+1:], 37-e)
+    print s.canIWin(19, 190)
 
 
 if __name__ == '__main__':
