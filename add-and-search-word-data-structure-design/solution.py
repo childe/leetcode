@@ -25,9 +25,9 @@ You may assume that all words are consist of lowercase letters a-z.
 
 
 class C(object):
-    def __init__(self, c):
+    def __init__(self, leaf=False):
         self.children = dict()
-        self.char = c
+        self.leaf = leaf
 
 
 class WordDictionary(object):
@@ -36,8 +36,7 @@ class WordDictionary(object):
         """
         Initialize your data structure here.
         """
-        self.root = C('^')
-        self.leaf = C('$')
+        self.root = C()
 
     def addWord(self, word):
         """
@@ -46,43 +45,39 @@ class WordDictionary(object):
         :rtype: void
         >>> w = WordDictionary()
         >>> w.addWord('ran')
-        >>> w.root.children['r'].children['a'].children['n'].children.keys()
-        ['$']
+        >>> w.root.children['r'].children['a'].leaf
+        False
+        >>> w.root.children['r'].children['a'].children['n'].leaf
+        True
         >>> w.addWord('rune')
         >>> w.root.children['r'].children['u'].children['n'].children.keys()
         ['e']
         >>> w = WordDictionary()
         >>> w.addWord('a')
         >>> w.addWord('ab')
+        >>> w.root.children['a'].leaf
+        True
         >>> len(w.root.children['a'].children)
-        2
+        1
         >>> w = WordDictionary()
         >>> w.addWord('abcd')
-        >>> w.root.children['a'].char
-        'a'
         >>> sorted(w.root.children.keys())
         ['a']
-        >>> w.root.children['a'].children['b'].children['c'].children['d'].char
-        'd'
         >>> w.addWord('abxy')
         >>> sorted(w.root.children.keys())
         ['a']
-        >>> w.root.children['a'].children['b'].children['x'].children['y'].char
-        'y'
         >>> len(w.root.children['a'].children['b'].children)
         2
-        >>> w.addWord('ab')
-        >>> w.root.children['a'].children['b'].children['$'].char
-        '$'
         """
         current = self.root
         for c in word:
             if c in current.children:
                 current = current.children[c]
             else:
-                current.children[c] = C(c)
-                current = current.children[c]
-        current.children['$'] = self.leaf
+                child = C()
+                current.children[c] = child
+                current = child
+        current.leaf = True
 
     def search(self, word):
         """
@@ -105,13 +100,8 @@ class WordDictionary(object):
             node, pos = stack.pop()
             # print node.char, pos, len(stack)
 
-            if node.char == '$':
-                if pos == len(word):
-                    return True
-                continue
-
             if 1+pos == len(word):
-                if '$' in node.children:
+                if node.leaf:
                     return True
                 continue
 
@@ -133,6 +123,7 @@ def main():
     w.addWord('ran')
     w.addWord('rune')
     print w.search('r.n')
+
 
 if __name__ == '__main__':
     main()
