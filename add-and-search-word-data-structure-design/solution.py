@@ -71,12 +71,12 @@ class WordDictionary(object):
         """
         current = self.root
         for c in word:
-            if c in current.children:
-                current = current.children[c]
+            child = current.children.get(c)
+            if child:
+                current = child
             else:
                 child = C()
-                current.children[c] = child
-                current = child
+                current.children[c], current = child, child
         current.leaf = True
 
     def search(self, word):
@@ -96,11 +96,12 @@ class WordDictionary(object):
         """
 
         stack = [(self.root, -1)]
+        lastP = len(word)-1
         while stack:
             node, pos = stack.pop()
             # print node.char, pos, len(stack)
 
-            if 1+pos == len(word):
+            if pos == lastP:
                 if node.leaf:
                     return True
                 continue
