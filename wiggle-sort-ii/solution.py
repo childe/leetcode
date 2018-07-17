@@ -64,14 +64,6 @@ class Solution(object):
             return j, len(nums) - 1
         return j, p-1
 
-    def findKMedium2(self, nums, k, start, end):
-        # print nums, k, start, end
-        if start+k > end:
-            return nums[end]
-        if end - start < 5:
-            return sorted(nums[start:1+end])[k]
-        raise BaseException()
-
     def findKMedium(self, nums, k):
         # print '~~', nums, k
         if k >= len(nums):
@@ -84,9 +76,10 @@ class Solution(object):
         l = len(nums)
         mediums = []
         for i in range(0, l - l % 5, 5):
-            mediums.append(self.findKMedium2(nums, 2, i, i+4))
+            mediums.append(sorted(nums[i:i+4])[2])
         if l % 5 != 0:
-            mediums.append(self.findKMedium2(nums, 2, i+5, l-1))
+            ns = sorted(nums[i+5:l])
+            mediums.append(ns[len(ns)//2])
         medium = self.findKMedium(mediums, len(mediums)//2)
         # print 'mediums', mediums, medium
 
@@ -139,7 +132,7 @@ def main():
     # print nums
     # return
 
-    nums = [1, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2]
+    nums = [1,5,1,1,6,4]
 
     s.wiggleSort(nums)
     print nums
