@@ -14,7 +14,6 @@ Example 2:
 
 Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
 """
-# Definition for singly-linked list.
 
 
 class ListNode(object):
@@ -29,40 +28,29 @@ class Solution(object):
         :type head: ListNode
         :rtype: void Do not return anything, modify head in-place instead.
         """
-        l, n = 0, head
-        while n:
-            l += 1
-            n = n.next
-
-        if l <= 2:
+        if head is None:
             return
 
-        p = head
-        for i in range((l-1)//2):
-            p = p.next
+        # find mid node & reverse first half list
+        p, q, skip_p = head, head.next, head.next
+        head.next = None
+        while skip_p and skip_p.next:
+            skip_p = skip_p.next.next
 
-        q = p.next
-        p.next = None
-
-        p = q
-        q = p.next
-
-        p.next = None
-
-        while q:
-            qq = q.next
-            q.next = p
+            qq, q.next = q.next, p
             p, q = q, qq
 
-        n = head
+        # reorder
+        if skip_p is None:
+            last_p, p = p, p.next
+            last_p.next = None
+        else:
+            last_p = None
+
         while p:
-            q = p.next
-            p.next = n.next
-            n.next = p
-
-            n = p.next
-            p = q
-
+            pn, qn = p.next, q.next
+            p.next, q.next = q, last_p
+            last_p, p, q = p, pn, qn
 
 
 def printList(n):
@@ -85,6 +73,11 @@ def createList(nums):
 
 def main():
     s = Solution()
+
+    l = createList(range(1, 7))
+    printList(l)
+    s.reorderList(l)
+    printList(l)
 
     l = createList(range(1, 6))
     printList(l)
@@ -110,6 +103,7 @@ def main():
     printList(l)
     s.reorderList(l)
     printList(l)
+
 
 if __name__ == '__main__':
     main()
