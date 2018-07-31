@@ -23,33 +23,16 @@ class Solution(object):
         """
         :type nums: List[int]
         :rtype: List[int]
-        >>> s = Solution()
-        >>> s.findDuplicates([4,3,2,7,8,2,3,1])
-        [2, 3]
         """
-        l = len(nums)
-        rst = []
-        for i in range(l):
-            # print 'i', i, nums
-            n = nums[i]
-            if n == l+1:
-                continue
-            if n == i + 1:
-                nums[i] = l+1
-                continue
-            nums[i] = 0
-            while True:
-                # print nums
-                if nums[n-1] == l+1:
-                    rst.append(n)
-                    # print rst
-                    break
-                elif nums[n-1] == 0:
-                    nums[n-1] = l+1
-                    break
-                nums[n-1], n = l+1, nums[n-1]
-
-        return rst
+        result = list()
+        n = len(nums)
+        for i in nums:
+            # print i,nums
+            if nums[-abs(i)] > 0:
+                nums[-abs(i)] *= -1
+            else:
+                result.append(abs(i))
+        return result
 
 
 def main():
