@@ -71,7 +71,7 @@ class Solution(object):
         for i in range(1, 1+(len(S)+1)/2):
             last_num = int(S[-i:])
             if last_num >= 2147483648:
-                continue
+                return []
             rst = [last_num]
             # print last_num
             l, x, y = self.hasLast2Nums(S[:-i], last_num)
