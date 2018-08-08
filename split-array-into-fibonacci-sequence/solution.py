@@ -49,10 +49,13 @@ class Solution(object):
         rtype: length, numA, numB
         >>> s = Solution()
         >>> s.hasLast2Nums("112358", 13)
-        (2, 5, 8)
+        [(2, 5, 8)]
         >>> s.hasLast2Nums("112358", 18)
-        (0, None, None)
+        []
+        >>> s.hasLast2Nums("114", 15)
+        [(3, 11, 4), (3, 1, 14)]
         """
+        rst = []
         for i in range(1, len(S)):
             x = int(S[-i:])
             if x > sumValue:
@@ -60,8 +63,8 @@ class Solution(object):
             y = sumValue - x
             yStr = str(y)
             if S[:-i].endswith(yStr):
-                return i+len(yStr), y, x
-        return 0, None, None
+                rst.append((i+len(yStr), y, x))
+        return rst
 
     def splitIntoFibonacci(self, S):
         """
@@ -72,13 +75,11 @@ class Solution(object):
             last_num = int(S[-i:])
             if last_num >= 2147483648:
                 return []
-            rst = [last_num]
             # print last_num
-            l, x, y = self.hasLast2Nums(S[:-i], last_num)
-            # print l, x, y
-            if l > 0:
-                rst.insert(0, y)
-                rst.insert(0, x)
+            last2Nums = self.hasLast2Nums(S[:-i], last_num)
+            for l, x, y in last2Nums:
+                # print l, x, y
+                rst = [x, y, last_num]
                 length = i+l
                 while True:
                     if length == len(S):
@@ -94,6 +95,7 @@ class Solution(object):
 
 def main():
     s = Solution()
+    print s.splitIntoFibonacci("1311415")
     print s.splitIntoFibonacci("123456579")
     print s.splitIntoFibonacci("11235813")
     print s.splitIntoFibonacci("1101111")
