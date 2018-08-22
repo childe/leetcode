@@ -24,6 +24,15 @@ There is only one duplicate number in the array, but it could be repeated more t
 
 
 class Solution(object):
+    def findNumCountsBasedonMid(self, nums, low, high, mid1, mid2):
+        a, b = 0, 0
+        for n in nums:
+            if low <= n <= mid1:
+                a += 1
+            if mid2 <= n <= high:
+                b += 1
+        return a, b
+
     def findDuplicate(self, nums):
         """
         :type nums: List[int]
@@ -34,9 +43,23 @@ class Solution(object):
         >>> s.findDuplicate([3,1,3,4,2])
         3
         """
-        l = len(nums)
-        for i, n in enumerate(nums):
-            n = n % l
-            if nums[n-1] > l:
-                return n
-            nums[n-1] += l
+        low, high = 1, len(nums)
+        mid1, mid2 = (low+high)/2, (low+high+1)/2
+        while low < high:
+            # print low, high, mid1, mid2
+            a, b = self.findNumCountsBasedonMid(nums, low, high, mid1, mid2)
+            # print a, b
+            if a == b:
+                return mid1
+            if a > b:
+                high = mid1
+            else:
+                low = mid2
+            mid1, mid2 = (low+high)/2, (low+high+1)/2
+        return low
+
+
+if __name__ == '__main__':
+    s = Solution()
+    # print s.findDuplicate([2, 3, 4, 2, 2])
+    print s.findDuplicate([3,1,3,4,2])
