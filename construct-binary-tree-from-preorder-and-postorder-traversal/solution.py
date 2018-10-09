@@ -59,7 +59,6 @@ class Solution(object):
         :type post: List[int]
         :rtype: TreeNode
         """
-        print pre, post
         if len(pre) != len(post):
             return None
 
