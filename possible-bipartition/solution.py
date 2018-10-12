@@ -45,12 +45,13 @@ class Solution(object):
         :type dislikes: List[List[int]]
         :rtype: bool
         """
-        graph = [None] * (1+N)
-        for i in range(1, 1+N):
-            graph[i] = [0] * (1+N)
+        graph = []
+        for i in range(1+N):
+            graph.append([])
 
         for x, y in dislikes:
-            graph[x][y] = graph[y][x] = 1
+            graph[x].append(y)
+            graph[y].append(x)
 
         not_visited = set(range(1, 1+N))
 
@@ -61,19 +62,17 @@ class Solution(object):
             while groupA.difference(visited) or groupB.difference(visited):
                 for n in groupA.difference(visited):
                     visited.add(n)
-                    for i in range(1, N+1):
-                        if graph[n][i]:
-                            if i in groupA:
-                                return False
-                            groupB.add(i)
+                    for i in graph[n]:
+                        if i in groupA:
+                            return False
+                        groupB.add(i)
 
                 for n in groupB.difference(visited):
                     visited.add(n)
-                    for i in range(1, N+1):
-                        if graph[n][i]:
-                            if i in groupB:
-                                return False
-                            groupA.add(i)
+                    for i in graph[n]:
+                        if i in groupB:
+                            return False
+                        groupA.add(i)
             not_visited.difference_update(visited)
 
         return True
