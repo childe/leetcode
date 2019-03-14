@@ -157,26 +157,29 @@ func findMostRight(n *TreeNode) *TreeNode {
 }
 
 func f(current, preNode *TreeNode, firstNodeExist, debug bool) (rst bool) {
+	var print func(format string, a ...interface{}) (n int, err error)
 	if debug {
-		defer func() {
-			if rst {
-				if !firstNodeExist {
-					fmt.Printf("first: %d\n", current.Val)
-				} else {
-					fmt.Printf("second: %d\n", current.Val)
-				}
-			}
-		}()
+		print = fmt.Printf
+	} else {
+		print = func(format string, a ...interface{}) (n int, err error) {
+			return 0, nil
+		}
 	}
 
-	if debug {
-		fmt.Println(current.Val)
-	}
+	defer func() {
+		if rst {
+			if !firstNodeExist {
+				print("first: %d\n", current.Val)
+			} else {
+				print("second: %d\n", current.Val)
+			}
+		}
+	}()
+
+	print("current: %d\n", current.Val)
 	if !firstNodeExist {
 		mostRight := findMostRight(current)
-		if debug {
-			fmt.Printf("mostRight: %d\n", mostRight.Val)
-		}
+		print("mostRight: %d\n", mostRight.Val)
 		if mostRight == current || mostRight == nil {
 			mostRight = current.Right
 		}
@@ -184,9 +187,7 @@ func f(current, preNode *TreeNode, firstNodeExist, debug bool) (rst bool) {
 			return true
 		}
 	} else {
-		if debug {
-			fmt.Printf("pre: %d\n", preNode.Val)
-		}
+		print("pre: %d\n", preNode.Val)
 		if current.Val < preNode.Val {
 			return true
 		}
