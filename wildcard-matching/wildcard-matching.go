@@ -212,4 +212,10 @@ func main() {
 	p = "a*c?b"
 	r = isMatch(s, p)
 	fmt.Println(r == false)
+
+	s = "abbabaaabbabbaababbabbbbbabbbabbbabaaaaababababbbabababaabbababaabbbbbbaaaabababbbaabbbbaabbbbababababbaabbaababaabbbababababbbbaaabbbbbabaaaabbababbbbaababaabbababbbbbababbbabaaaaaaaabbbbbaabaaababaaaabb"
+	p = "*ba*a*bb*aa*b*a*aaaaa*"
+	r = isMatch(s, p)
+	fmt.Println(r == true)
+
 }
