@@ -40,15 +40,15 @@ func solveNQueens(n int) [][]string {
 		solution = make([]int, n)
 		for i < n {
 			for j = solution[i] + 1; j <= n; j++ {
-				fmt.Printf("%v %d %d\n", solution, i, j)
+				//fmt.Printf("%v %d %d\n", solution, i, j)
 				if ifValid(solution, i, j) {
-					fmt.Println("valid")
+					//fmt.Println("valid")
 					solution[i] = j
 					break
 				}
-				fmt.Println("not valid")
+				//fmt.Println("not valid")
 			}
-			fmt.Printf("j = %d\n", j)
+			//fmt.Printf("j = %d\n", j)
 
 			if j > n {
 				if i == 0 {
@@ -58,9 +58,10 @@ func solveNQueens(n int) [][]string {
 				solution[i] = 0
 				i--
 			} else {
-				i++
-				if i == n {
+				if i+1 == n {
 					rst = append(rst, solutionToString(solution))
+				} else {
+					i++
 				}
 			}
 		}
@@ -70,9 +71,10 @@ func solveNQueens(n int) [][]string {
 }
 
 func solutionToString(solution []int) []string {
-	rst := make([]string, len(solution))
+	l := len(solution)
+	rst := make([]string, l)
 	for i, n := range solution {
-		b := make([]byte, n)
+		b := make([]byte, l)
 		for j, _ := range b {
 			b[j] = '.'
 		}
@@ -126,9 +128,17 @@ func main() {
 	var rst [][]string
 	n = 4
 	rst = solveNQueens(n)
-	fmt.Println(rst)
-	fmt.Println(len(rst) == 2)
 
-	//one := []string{"..Q.", "Q...", "...Q", ".Q.."}
-	//fmt.Println(check(conv(one)))
+	for _, s := range rst {
+		fmt.Println(s)
+		fmt.Println(check(conv(s)))
+	}
+
+	n = 5
+	rst = solveNQueens(n)
+
+	for _, s := range rst {
+		fmt.Println(s)
+		fmt.Println(check(conv(s)))
+	}
 }
