@@ -86,7 +86,11 @@ func ifValid(s []int, i, j int) bool {
 func main() {
 	var n int
 	var total int
-	n = 14
+	n = 4
+	total = totalNQueens(n)
+	fmt.Println(total)
+
+	n = 5
 	total = totalNQueens(n)
 	fmt.Println(total)
 }
