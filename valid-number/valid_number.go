@@ -33,12 +33,11 @@ Of course, the context of these characters also matters in the input.
 */
 
 func isInteger(s string) bool {
-	if s == "" {
-		return false
-	}
+	var hasDigit = false
 	for i, c := range s {
 		switch {
 		case c >= '0' && c <= '9':
+			hasDigit = true
 		case c == '-' || c == '+':
 			if i > 0 {
 				return false
@@ -47,17 +46,16 @@ func isInteger(s string) bool {
 			return false
 		}
 	}
-	return true
+	return hasDigit
 }
 
 func isIntegerOrFloat(s string) bool {
-	if s == "" {
-		return false
-	}
 	var hasDot = false
+	var hasDigit = false
 	for i, c := range s {
 		switch {
 		case c >= '0' && c <= '9':
+			hasDigit = true
 		case c == '-' || c == '+':
 			if i > 0 {
 				return false
@@ -72,7 +70,7 @@ func isIntegerOrFloat(s string) bool {
 		}
 	}
 
-	return true
+	return hasDigit
 }
 
 func isNumber(s string) bool {

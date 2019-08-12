@@ -17,6 +17,8 @@ var testCases = map[string]bool{
 	" --6 ":     false,
 	"-+3":       false,
 	"95a54e53":  false,
+	".":         false,
+	"4e+":       false,
 }
 
 func TestValidNumber(t *testing.T) {
