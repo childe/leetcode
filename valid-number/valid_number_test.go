@@ -20,10 +20,10 @@ var testCases = map[string]bool{
 }
 
 func TestValidNumber(t *testing.T) {
-	for number, answer := range testCases {
+	for number, correctAnswer := range testCases {
 		rst := isNumber(number)
-		if rst != answer {
-			t.Error(number, answer)
+		if rst != correctAnswer {
+			t.Error(number, correctAnswer)
 		}
 	}
 }

@@ -1,5 +1,9 @@
 package main
 
+import (
+	"strings"
+)
+
 /*
 Validate if a given string can be interpreted as a decimal number.
 
@@ -28,7 +32,55 @@ Decimal point - "."
 Of course, the context of these characters also matters in the input.
 */
 
-func isNumber(s string) bool {
-	var state = "init"
+func isInteger(s string) bool {
+	if s == "" {
+		return false
+	}
+	for i, c := range s {
+		switch {
+		case c >= '0' && c <= '9':
+		case c == '-' || c == '+':
+			if i > 0 {
+				return false
+			}
+		default:
+			return false
+		}
+	}
 	return true
+}
+
+func isIntegerOrFloat(s string) bool {
+	if s == "" {
+		return false
+	}
+	var hasDot = false
+	for i, c := range s {
+		switch {
+		case c >= '0' && c <= '9':
+		case c == '-' || c == '+':
+			if i > 0 {
+				return false
+			}
+		case c == '.':
+			if hasDot {
+				return false
+			}
+			hasDot = true
+		default:
+			return false
+		}
+	}
+
+	return true
+}
+
+func isNumber(s string) bool {
+	s = strings.TrimSpace(s)
+	for i, c := range s {
+		if c == 'e' || c == 'E' {
+			return isIntegerOrFloat(s[:i]) && isInteger(s[i+1:])
+		}
+	}
+	return isIntegerOrFloat(s)
 }
