@@ -48,9 +48,9 @@ func genGrid(input string) [][]byte {
 		for i, b := range line {
 			switch b {
 			case '0':
-				row[i] = 0
+				row[i] = '0'
 			case '1':
-				row[i] = 1
+				row[i] = '1'
 			}
 		}
 		grid = append(grid, row)

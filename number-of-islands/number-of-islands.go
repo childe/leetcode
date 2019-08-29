@@ -57,21 +57,21 @@ func numIslands(grid [][]byte) int {
 			// 把上下左右的1都找到
 			keys := make([][]int, 0)
 			// 上
-			if i > 0 && j < len(grid[i-1]) && grid[i-1][j] == 1 && 0 == visited[i-1][j] {
+			if i > 0 && j < len(grid[i-1]) && grid[i-1][j] == '1' && 0 == visited[i-1][j] {
 				keys = append(keys, keyGen(i-1, j))
 			}
 			// 下
-			if i < len(grid)-1 && j < len(grid[i+1]) && grid[i+1][j] == 1 && 0 == visited[i+1][j] {
+			if i < len(grid)-1 && j < len(grid[i+1]) && grid[i+1][j] == '1' && 0 == visited[i+1][j] {
 				keys = append(keys, keyGen(i+1, j))
 			}
 
 			// 左
-			if j > 0 && grid[i][j-1] == 1 && 0 == visited[i][j-1] {
+			if j > 0 && grid[i][j-1] == '1' && 0 == visited[i][j-1] {
 				keys = append(keys, keyGen(i, j-1))
 			}
 
 			// 右
-			if j < len(grid[i])-1 && grid[i][j+1] == 1 && 0 == visited[i][j+1] {
+			if j < len(grid[i])-1 && grid[i][j+1] == '1' && 0 == visited[i][j+1] {
 				keys = append(keys, keyGen(i, j+1))
 			}
 
@@ -92,7 +92,7 @@ func keyGen(i, j int) []int {
 func findUnvisited(grid, visited [][]byte) (int, int) {
 	for i, row := range grid {
 		for j, c := range row {
-			if c == 1 && 0 == visited[i][j] {
+			if c == '1' && 0 == visited[i][j] {
 				return i, j
 			}
 		}
