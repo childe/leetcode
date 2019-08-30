@@ -27,76 +27,47 @@ Input:
 Output: 3
 */
 
+type P struct {
+	x, y int
+}
+
 func numIslands(grid [][]byte) int {
-	visited := make([][]byte, len(grid))
-	for i, _ := range visited {
-		visited[i] = make([]byte, len(grid[i]))
-		for j, _ := range visited[i] {
-			visited[i][j] = 0
-		}
-	}
-
-	rst := 0
+	islands := make(map[P]*P)
 	for {
-		i, j := findUnvisited(grid, visited)
-		if i == -1 {
-			return rst
+		x, y := findUnvisited(grid, islands)
+		if x == -1 {
+			return len(islands)
 		}
-
-		rst++
-
-		visited[i][j] = 1
+		islands[P{x, y}] = &P{x, y}
 
 		// BFS 遍历当前 island
-		island_stack := [][]int{[]int{i, j}}
+		island_stack := []P{P{x, y}}
 		for len(island_stack) > 0 {
-			i = island_stack[0][0]
-			j = island_stack[0][1]
+			i, j := island_stack[0].x, island_stack[0].y
 			island_stack = island_stack[1:]
 
 			// 把上下左右的1都找到
-			keys := make([][]int, 0)
-			// 上
-			if i > 0 && j < len(grid[i-1]) && grid[i-1][j] == '1' && 0 == visited[i-1][j] {
-				keys = append(keys, keyGen(i-1, j))
-			}
-			// 下
-			if i < len(grid)-1 && j < len(grid[i+1]) && grid[i+1][j] == '1' && 0 == visited[i+1][j] {
-				keys = append(keys, keyGen(i+1, j))
-			}
-
-			// 左
-			if j > 0 && grid[i][j-1] == '1' && 0 == visited[i][j-1] {
-				keys = append(keys, keyGen(i, j-1))
-			}
-
-			// 右
-			if j < len(grid[i])-1 && grid[i][j+1] == '1' && 0 == visited[i][j+1] {
-				keys = append(keys, keyGen(i, j+1))
-			}
-
-			for _, key := range keys {
-				visited[key[0]][key[1]] = 1
-				island_stack = append(island_stack, key)
+			ps := []P{P{i - 1, j}, P{i + 1, j}, P{i, j - 1}, P{i, j + 1}}
+			for _, p := range ps {
+				if p.x >= 0 && p.x < len(grid) && p.y >= 0 && p.y < len(grid[p.x]) &&
+					!(p.x == x && p.y == y) && grid[p.x][p.y] == '1' {
+					grid[p.x][p.y] = '0'
+					island_stack = append(island_stack, p)
+				}
 			}
 		}
 	}
 
-	return rst
+	return len(islands)
 }
 
-func keyGen(i, j int) []int {
-	return []int{i, j}
-}
-
-func findUnvisited(grid, visited [][]byte) (int, int) {
+func findUnvisited(grid [][]byte, islands map[P]*P) (int, int) {
 	for i, row := range grid {
 		for j, c := range row {
-			if c == '1' && 0 == visited[i][j] {
+			if c == '1' && islands[P{i, j}] == nil {
 				return i, j
 			}
 		}
 	}
-
 	return -1, -1
 }
