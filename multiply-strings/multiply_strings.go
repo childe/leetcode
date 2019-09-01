@@ -65,7 +65,7 @@ type NumZero struct {
 	zeroCount int
 }
 
-func add(n1 NumZero, n2 NumZero) NumZero {
+func (n1 *NumZero) add(n2 *NumZero) *NumZero {
 	if n1.num == "0" {
 		return n2
 	}
@@ -74,38 +74,46 @@ func add(n1 NumZero, n2 NumZero) NumZero {
 	}
 
 	if n1.zeroCount > n2.zeroCount {
-		return add(n2, n1)
+		return n2.add(n1)
 	}
 
 	s := addString(n1.num, n2.num+strings.Repeat("0", n2.zeroCount-n1.zeroCount))
-	return NumZero{s, n1.zeroCount}
+
+	return &NumZero{s, n1.zeroCount}
 }
 
 func multiply(num1 string, num2 string) (n string) {
-	if len(num1) > len(num2) {
-		return multiply(num2, num1)
-	}
+	n1list := GenNZeroList(num1)
+	n2list := GenNZeroList(num2)
 
-	if num1 == "0" || num1 == "" {
-		return "0"
-	}
-
-	if len(num1) == 1 {
-		n = num2
-		for i := 1; i < int(num1[0])-'0'; i++ {
-			n = addString(n, num2)
+	rst := &NumZero{"0", 0}
+	for _, n1 := range n1list {
+		for _, n2 := range n2list {
+			rst = rst.add(&NumZero{itoa(n1.n * n2.n), n1.zeroCount + n2.zeroCount})
 		}
-		return
 	}
-
-	len1, len2 := len(num1), len(num2)
-	p1 := NumZero{multiply(num1[0:len1/2], num2[len2/2:]), len1 - len1/2}
-	p2 := NumZero{multiply(num1[len1/2:], num2[0:len2/2]), len2 - len2/2}
-	rst := add(p1, p2)
-	rst = add(rst, NumZero{multiply(num1[0:len1/2], num2[0:len2/2]), len1 + len2 - len1/2 - len2/2})
-	rst = add(rst, NumZero{multiply(num1[len1/2:], num2[len2/2:]), 0})
 
 	return rst.num + strings.Repeat("0", rst.zeroCount)
+}
+
+type NZero struct {
+	n         int
+	zeroCount int
+}
+
+func GenNZeroList(num string) []*NZero {
+	var partLength = 8
+	var n string
+	rst := make([]*NZero, 0)
+	for len(num) > partLength {
+		n = num[:partLength]
+		rst = append(rst, &NZero{atoi(n), len(num) - len(n)})
+		num = num[partLength:]
+	}
+	if len(num) > 0 {
+		rst = append(rst, &NZero{atoi(num), 0})
+	}
+	return rst
 }
 
 func atoi(s string) (n int) {
@@ -115,11 +123,22 @@ func atoi(s string) (n int) {
 	return
 }
 
-func iaoi(n int) string {
+func itoa(n int) string {
+	if n == 0 {
+		return "0"
+	}
+
 	rst := make([]byte, 0)
 	for n > 0 {
 		rst = append(rst, byte(n%10+'0'))
 		n = n / 10
 	}
+
+	l := len(rst)
+
+	for i := 0; i < l/2; i++ {
+		rst[i], rst[l-1-i] = rst[l-1-i], rst[i]
+	}
+
 	return string(rst)
 }
