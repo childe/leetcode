@@ -102,7 +102,7 @@ type NZero struct {
 }
 
 func GenNZeroList(num string) []*NZero {
-	var partLength = 8
+	var partLength = 9
 	var n string
 	rst := make([]*NZero, 0)
 	for len(num) > partLength {
