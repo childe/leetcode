@@ -83,6 +83,8 @@ class Solution(object):
                         matrix[i][j+1] = current+1
                         changed = True
 
+            current+=1
+        return matrix
 
 def main():
     s = Solution()
