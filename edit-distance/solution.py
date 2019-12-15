@@ -34,49 +34,45 @@ Example 2:
 
 
 class Solution:
-    def cache(func):
-        cache = {}
+    def printdp(self, dp):
+        for row in dp:
+            print(row)
+        print()
 
-        def inner(*args, **kargs):
-            key = tuple(args[1:])
-            if key in cache:
-                return cache[key]
-
-            r = func(*args, **kargs)
-            cache[key] = r
-            return r
-
-        return inner
-
-    @cache
     def minDistance(self, word1: str, word2: str) -> int:
-        if len(word1) == 0:
-            return len(word2)
-        if len(word2) == 0:
-            return len(word1)
+        dp = [None] * (1+len(word1))
+        for i in range(1+len(word1)):
+            dp[i] = [None] * (1+len(word2))
+            dp[i][0] = i
+        for j in range(1+len(word2)):
+            dp[0][j] = j
 
-        if word1[-1] == word2[-1]:
-            return min(
-                self.minDistance(word1[:-1], word2[:-1]),
-                self.minDistance(word1[:-1], word2[:-1])+1,
-                self.minDistance(word1[:-1], word2)+1
-            )
+        for i in range(len(word1)):
+            for j in range(len(word2)):
+                if word1[i] == word2[j]:
+                    dp[i+1][j+1] = min(
+                        dp[i][j],
+                        dp[i][j+1]+1,
+                        dp[i+1][j]+1
+                    )
+                else:
+                    dp[i+1][j+1] = min(
+                        dp[i][j]+1,
+                        dp[i][j+1]+1,
+                        dp[i+1][j]+1
+                    )
 
-        return min(
-            self.minDistance(word1, word2[:-1])+1,
-            self.minDistance(word1[:-1], word2[:-1])+1,
-            self.minDistance(word1[:-1], word2)+1
-        )
-
-        return r
+        return dp[len(word1)][len(word2)]
 
 
 def main():
     s = Solution()
     d = s.minDistance('horse', 'ros')
+    print(d)
     assert d == 3
 
     d = s.minDistance('intention', 'execution')
+    print(d)
     assert d == 5
 
 
