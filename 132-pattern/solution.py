@@ -30,45 +30,7 @@ Explanation: There are three 132 patterns in the sequence: [-1, 3, 2], [-1, 3, 0
 """
 
 
-class Node(object):
-    def __init__(self, val):
-        self.val = val
-        self.left = None
-        self.right = None
-
-
 class Solution(object):
-    def buildBinTree(self, nums):
-        root = Node(nums[0])
-        for n in nums[1:]:
-            node = root
-            while node:
-                if n <= node.val:
-                    if node.left:
-                        node = node.left
-                    else:
-                        node.left = Node(n)
-                        break
-                else:
-                    if node.right:
-                        node = node.right
-                    else:
-                        node.right = Node(n)
-                        break
-        return root
-
-    def find132patternFromBinTree(self, root):
-        if root is None:
-            return False
-        if self.find132patternFromBinTree(root.left):
-            return True
-        if self.find132patternFromBinTree(root.right):
-            return True
-        r = root.right
-        if r is not None and r.left is not None:
-            return True
-        return False
-
     def find132pattern(self, nums):
         """
         :type nums: List[int]
@@ -77,9 +39,29 @@ class Solution(object):
         if not nums:
             return False
 
-        root = self.buildBinTree(nums)
+        candidates = [[nums[0]]]
+        for n in nums:
+            # print(candidates)
+            if n < candidates[-1][0]:
+                candidates.append([n])
+                continue
+            if n == candidates[-1][0]:
+                continue
+            for c in candidates:
+                if len(c) == 2:
+                    if c[0] < n < c[1]:
+                        return True
+                    if n > c[1]:
+                        c[1] = n
+                else:
+                    if n > c[0]:
+                        c.append(n)
+                    else:
+                        c[0] = n
 
-        return self.find132patternFromBinTree(root)
+            # if append is False and [n] not in candidates:
+                # candidates.append([n])
+        return False
 
 
 def main():
