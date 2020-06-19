@@ -30,23 +30,52 @@ class Solution(object):
         """
         if len(s1) + len(s2) != len(s3):
             return False
-        return self.isInterleaveR(s1, s2, s3)
 
-    def isInterleaveR(self, s1, s2, s3):
-        if s2 == "":
-            return s1 == s3
-        if s1 == "":
-            return s2 == s3
+        visited = set((0, 0, 0))
+        bfs_stack = [(0, 0, 0)]
+        while bfs_stack:
+            print(len(bfs_stack))
+            i, j, k = bfs_stack.pop()
+            if i == len(s1):
+                if s2[j:] == s3[k:]:
+                    return True
+            elif s1[i] == s3[k]:
+                n = (i + 1, j, k + 1)
+                if n not in visited:
+                    visited.add(n)
+                    bfs_stack.insert(0, n)
+            if j == len(s2):
+                if s1[i:] == s3[k:]:
+                    return True
+            elif s2[j] == s3[k]:
+                n = (i, j + 1, k + 1)
+                if n not in visited:
+                    visited.add(n)
+                    bfs_stack.insert(0, n)
 
-        if s1[0] == s3[0]:
-            if s2[0] != s3[0]:
-                return self.isInterleaveR(s1[1:], s2, s3[1:])
-            return self.isInterleaveR(s1[1:], s2, s3[1:]) or self.isInterleaveR(
-                s1, s2[1:], s3[1:]
-            )
-        if s2[0] == s3[0]:
-            return self.isInterleaveR(s1, s2[1:], s3[1:])
         return False
+
+
+def create_s3():
+    import random
+    import string
+
+    s1 = "".join([random.choice(string.ascii_lowercase) for i in range(20)])
+    s2 = "".join([random.choice(string.ascii_lowercase) for i in range(20)])
+
+    s3 = ""
+    i, j = 0, 0
+    while i < len(s1) and j < len(s2):
+        if random.random() < 0.5:
+            s3 += s1[i]
+            i += 1
+        else:
+            s3 += s2[j]
+            j += 1
+
+    s3 += s1[i:]
+    s3 += s2[j:]
+    return s1, s2, s3
 
 
 def main():
@@ -64,6 +93,32 @@ def main():
     ans = s.isInterleave(s1, s2, s3)
     assert ans is False
 
+    import random
+
+    for i in range(100):
+        s1, s2, s3 = create_s3()
+        # print(s1, s2, s3)
+        ans = s.isInterleave(s1, s2, s3)
+        assert ans is True
+        t = list(s3)
+        random.shuffle(t)
+        s3 = "".join(t)
+        ans = s.isInterleave(s1, s2, s3)
+        assert ans is False
+
+    s1 = "a" * 20 + "b"
+    s2 = "a" * 20 + "c"
+    s3 = "a" * 40 + "bc"
+    s3 = s3[: len(s1) + len(s2)]
+    ans = s.isInterleave(s1, s2, s3)
+    assert ans is True
+
+    s1 = "a" * 20 + "b"
+    s2 = "a" * 20 + "c"
+    s3 = "a" * 40 + "xy"
+    s3 = s3[: len(s1) + len(s2)]
+    ans = s.isInterleave(s1, s2, s3)
+    assert ans is False
 
 if __name__ == "__main__":
     main()
