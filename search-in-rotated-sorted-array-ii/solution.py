@@ -34,25 +34,72 @@ class Solution(object):
         :rtype: bool
         """
         s, e = 0, len(nums) - 1
-        m = (s + e + 1) // 2
-        while s < e:
+        while s <= e:
+            m = (s + e + 1) // 2
             n = nums[m]
+            # print(s, e, nums[s : e + 1], n)
+
             if n == target:
                 return True
 
-            if target > n:
-                if target <= nums[e]:
-                    ZZ
+            if target == nums[s]:
+                return True
+
+            if n == nums[s]:
+                s += 1
+                continue
+
+            if n > nums[s]:  # m 左边是单调的
+                if target > n:
+                    s = m + 1
+                    continue
+                if target < nums[s]:
+                    s = m + 1
+                else:
+                    e = m - 1
+            else:  # m 右边是单调的
+                if target < n:
+                    e = m - 1
+                    continue
+                if target < nums[s]:
+                    s = m + 1
+                else:
+                    e = m - 1
+        return False
 
 
 def main():
     s = Solution()
+
+    nums = [1, 1, 1, 3, 1]
+    target = 3
+    ans = s.search(nums, target)
+    print(ans)
+    assert ans is True
+
+    nums = [1, 1]
+    target = 2
+    ans = s.search(nums, target)
+    print(ans)
+    assert ans is False
+
+    nums = [1]
+    target = 1
+    ans = s.search(nums, target)
+    print(ans)
+    assert ans is True
 
     nums = [2, 5, 6, 0, 0, 1, 2]
     target = 0
     ans = s.search(nums, target)
     print(ans)
     assert ans is True
+
+    nums = [2, 5, 6, 0, 0, 1, 2]
+    target = 3
+    ans = s.search(nums, target)
+    print(ans)
+    assert ans is False
 
 
 if __name__ == "__main__":
