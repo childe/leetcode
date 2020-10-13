@@ -39,11 +39,17 @@ Notes:
 1 <= ages.length <= 20000.
 1 <= ages[i] <= 120.
 
-随手写了几个, 都超时了. 试一下双指针吧, 应该是最快的算法了.
 """
 
 
 class Solution(object):
+    def ifFriendRequest(self, a, b):
+        # if b > a:
+        # return False
+        if b <= 0.5 * a + 7:
+            return False
+        return True
+
     def numFriendRequests(self, ages):
         """
         :type ages: List[int]
@@ -52,27 +58,31 @@ class Solution(object):
         if len(ages) < 2:
             return 0
 
-        ages.sort()
+        ageCount = {}
+        for a in ages:
+            ageCount.setdefault(a, 0)
+            ageCount[a] += 1
+
+        uages = list(ageCount.keys())
+        uages.sort()
+        uages.reverse()
+        # print("!", uages)
+
+        cache = set()
+        for i, a in enumerate(uages):
+            for b in uages[i:]:
+                if self.ifFriendRequest(a, b):
+                    cache.add((a, b))
+        # print(cache)
+
         rst = 0
-        i, j, l = 0, 1, len(ages)
-
-        while j < l:
-            a = ages[i]
-            b = ages[j]
-            print(a, b, rst)
-            if a <= 0.5 * b + 7:
-                i += 1
-                if i == j:
-                    j += 1
-            elif b == a:
-                while j < l and a == ages[j]:
-                    j += 1
-                rst += (j - i) * (j - i - 1)
+        for a, b in cache:
+            if a == b:
+                c = ageCount[a]
+                rst += (c - 1) * c
             else:
-                rst += 1
-                j += 1
+                rst += ageCount[a] * ageCount[b]
 
-        rst += (j - i - 2) * (j - i - 1) // 2
         return rst
 
 
@@ -95,6 +105,10 @@ def main():
     ans = s.numFriendRequests([20, 30, 100, 110, 120])
     print(ans)
     assert ans == 3
+
+    for l in open("./input").readlines():
+        ans = s.numFriendRequests([int(e) for e in l.strip().split(",")])
+        print(ans)
 
 
 if __name__ == "__main__":
