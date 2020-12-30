@@ -53,7 +53,7 @@ cost[i][j]：是将第 i 个房子涂成颜色 j+1 的花费。
 
 class Solution(object):
     def __init__(self):
-        self.expenditures = []
+        self.currentMinCost = None
 
     def blockCount(self, houses):
         """
@@ -87,6 +87,8 @@ class Solution(object):
         :type target: int
         :rtype: int
         """
+        if self.currentMinCost is not None and expenditure >= self.currentMinCost:
+            return -1
         if zeroCount == 0:
             if self.blockCount(houses) != target:
                 return -1
@@ -95,13 +97,24 @@ class Solution(object):
         for i, h in enumerate(houses):
             if h == 0:
                 for j, c in enumerate(cost[i]):
-                    r = self.reMinCost(houses[:i]+[j+1] + houses[i+1:], cost, m, n, target, zeroCount-1, expenditure+c)
-                    if r != -1:
-                        self.expenditures.append(r)
+                    if (
+                        self.currentMinCost is None
+                        or expenditure + c < self.currentMinCost
+                    ):
+                        r = self.reMinCost(
+                            houses[:i] + [j + 1] + houses[i + 1 :],
+                            cost,
+                            m,
+                            n,
+                            target,
+                            zeroCount - 1,
+                            expenditure + c,
+                        )
+                        if r != -1:
+                            if self.currentMinCost is None or self.currentMinCost > r:
+                                self.currentMinCost = r
 
-        if self.expenditures:
-            return min(self.expenditures)
-        return -1
+        return -1 if self.currentMinCost is None else self.currentMinCost
 
     def minCost(self, houses, cost, m, n, target):
         zeroCount = sum([h == 0 for h in houses])
@@ -109,7 +122,20 @@ class Solution(object):
 
 
 def main():
+    import json
+
     s = Solution()
+
+    lines = open("./input").readlines()
+    houses = json.loads(lines[0].strip())
+    cost = json.loads(lines[1].strip())
+    m = int(lines[2].strip())
+    n = int(lines[3].strip())
+    target = int(lines[4].strip())
+    ans = s.minCost(houses, cost, m, n, target)
+    print(ans)
+    assert ans == 11
+    return
 
     houses = [0, 2, 1, 2, 0]
     cost = [[1, 10], [10, 1], [10, 1], [1, 10], [5, 1]]
