@@ -52,73 +52,27 @@ cost[i][j]：是将第 i 个房子涂成颜色 j+1 的花费。
 
 
 class Solution(object):
-    def __init__(self):
-        self.currentMinCost = None
-
-    def blockCount(self, houses):
-        """
-        >>> s = Solution()
-        >>> s.blockCount([3,1,2,3])
-        4
-        >>> s.blockCount([1,1,1,1])
-        1
-        >>> s.blockCount([1,1,2,1])
-        3
-        """
-        rst = 0
-        pre = None
-        for n in houses:
-            if n == pre:
-                continue
-            rst += 1
-            pre = n
-
-        return rst
-
-    def noZero(self, houses):
-        return all([e != 0 for e in houses])
-
-    def reMinCost(self, houses, cost, m, n, target, zeroCount, expenditure):
-        """
-        :type houses: List[int]
-        :type cost: List[List[int]]
-        :type m: int
-        :type n: int
-        :type target: int
-        :rtype: int
-        """
-        if self.currentMinCost is not None and expenditure >= self.currentMinCost:
-            return -1
-        if zeroCount == 0:
-            if self.blockCount(houses) != target:
-                return -1
-            return expenditure
-
-        for i, h in enumerate(houses):
-            if h == 0:
-                for j, c in enumerate(cost[i]):
-                    if (
-                        self.currentMinCost is None
-                        or expenditure + c < self.currentMinCost
-                    ):
-                        r = self.reMinCost(
-                            houses[:i] + [j + 1] + houses[i + 1 :],
-                            cost,
-                            m,
-                            n,
-                            target,
-                            zeroCount - 1,
-                            expenditure + c,
-                        )
-                        if r != -1:
-                            if self.currentMinCost is None or self.currentMinCost > r:
-                                self.currentMinCost = r
-
-        return -1 if self.currentMinCost is None else self.currentMinCost
-
     def minCost(self, houses, cost, m, n, target):
-        zeroCount = sum([h == 0 for h in houses])
-        return self.reMinCost(houses, cost, m, n, target, zeroCount, 0)
+        # dp[i][j] 意思是, 前 i 个 house, 刷成 target = j 街区的所有可能的 [color[i], cost]
+        dp = [[None] * (m + 1)] * (target + 1)
+
+        # init
+        dp[0][0] = [None, 0]
+
+        ## m 个 house 刷成 0 个 target ,  可能的 (color,cost) 组合为空
+        for i in range(1, target + 1):
+            dp[0][i] = []
+
+        ## 0 house 刷 0 block, cost = 0.  可能的 (color,cost) 组合为空
+        for i in range(1, target + 1):
+            dp[i][0] = []
+
+        for row in dp:
+            print(row)
+
+        for i in range(1, m + 1):
+            for j in range(1, target + 1):
+                dp[i - 1][j - 1] + cost[i]
 
 
 def main():
@@ -126,16 +80,16 @@ def main():
 
     s = Solution()
 
-    lines = open("./input").readlines()
-    houses = json.loads(lines[0].strip())
-    cost = json.loads(lines[1].strip())
-    m = int(lines[2].strip())
-    n = int(lines[3].strip())
-    target = int(lines[4].strip())
-    ans = s.minCost(houses, cost, m, n, target)
-    print(ans)
-    assert ans == 11
-    return
+    # lines = open("./input").readlines()
+    # houses = json.loads(lines[0].strip())
+    # cost = json.loads(lines[1].strip())
+    # m = int(lines[2].strip())
+    # n = int(lines[3].strip())
+    # target = int(lines[4].strip())
+    # ans = s.minCost(houses, cost, m, n, target)
+    # print(ans)
+    # assert ans == 11
+    # return
 
     houses = [0, 2, 1, 2, 0]
     cost = [[1, 10], [10, 1], [10, 1], [1, 10], [5, 1]]
@@ -145,6 +99,7 @@ def main():
     ans = s.minCost(houses, cost, m, n, target)
     print(ans)
     assert ans == 11
+    return
 
     houses = [0, 0, 0, 0, 0]
     cost = [[1, 10], [10, 1], [10, 1], [1, 10], [5, 1]]
