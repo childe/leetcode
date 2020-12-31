@@ -52,27 +52,76 @@ cost[i][j]：是将第 i 个房子涂成颜色 j+1 的花费。
 
 
 class Solution(object):
-    def minCost(self, houses, cost, m, n, target):
-        # dp[i][j] 意思是, 前 i 个 house, 刷成 target = j 街区的所有可能的 [color[i], cost]
-        dp = [[None] * (m + 1)] * (target + 1)
+    def minCost(self, houses, costs, m, n, target):
+        # dp[i][j] 意思是, 前 i 个 house, 刷成 target = j 街区的所有可能的 (color[i], cost)
+        dp = []
 
         # init
-        dp[0][0] = [None, 0]
+        for i in range(m + 1):
+            dp.append([None] * (target + 1))
+        dp[0][0] = [(None, 0)]
 
         ## m 个 house 刷成 0 个 target ,  可能的 (color,cost) 组合为空
-        for i in range(1, target + 1):
-            dp[0][i] = []
+        for i in range(1, m + 1):
+            dp[i][0] = []
 
         ## 0 house 刷 0 block, cost = 0.  可能的 (color,cost) 组合为空
         for i in range(1, target + 1):
-            dp[i][0] = []
+            dp[0][i] = []
 
-        for row in dp:
-            print(row)
+        # for row in dp:
+        # print(row)
 
         for i in range(1, m + 1):
+            house_idx = i - 1
             for j in range(1, target + 1):
-                dp[i - 1][j - 1] + cost[i]
+                # print(i, j, dp[i - 1][j], dp[i - 1][j - 1], houses[house_idx])
+                dp[i][j] = []
+
+                # print("from (house-1, target)")
+                ## from (house-1, target)
+                for (color, cost) in dp[i - 1][j]:
+                    if color is None:  # 前面颜色为 None, 说明每一种新颜色都会生成新的 Block
+                        continue
+
+                        ## NO
+                        if houses[house_idx] != 0:
+                            dp[i][j].append((houses[house_idx], cost))
+                        else:
+                            for new_color, new_cost in enumerate(costs[house_idx]):
+                                new_color += 1
+                                dp[i][j].append((new_color, cost + new_cost))
+                    else:
+                        if houses[house_idx] == 0:
+                            dp[i][j].append((color, cost + costs[house_idx][color - 1]))
+                        elif houses[house_idx] == color:
+                            dp[i][j].append((color, cost))
+
+                # print("from (house-1, target-1)")
+                ## from (house-1, target-1)
+                for (color, cost) in dp[i - 1][j - 1]:
+                    if houses[house_idx] == color:
+                        continue
+                    if houses[house_idx] == 0:
+                        for new_color, new_cost in enumerate(costs[house_idx]):
+                            new_color += 1
+                            if new_color != color:
+                                dp[i][j].append((new_color, cost + new_cost))
+                    else:
+                        if houses[house_idx] != color:
+                            dp[i][j].append((houses[house_idx], cost))
+
+                filtered = {}
+                for (color, cost) in dp[i][j]:
+                    filtered.setdefault(color, set())
+                    filtered[color].add(cost)
+                dp[i][j] = []
+                for _color, _costs in filtered.items():
+                    dp[i][j].append((_color, min(_costs)))
+
+        if dp[i][j] == []:
+            return -1
+        return min(e[1] for e in dp[i][j])
 
 
 def main():
@@ -80,15 +129,15 @@ def main():
 
     s = Solution()
 
-    # lines = open("./input").readlines()
-    # houses = json.loads(lines[0].strip())
-    # cost = json.loads(lines[1].strip())
-    # m = int(lines[2].strip())
-    # n = int(lines[3].strip())
-    # target = int(lines[4].strip())
-    # ans = s.minCost(houses, cost, m, n, target)
-    # print(ans)
-    # assert ans == 11
+    lines = open("./input").readlines()
+    houses = json.loads(lines[0].strip())
+    cost = json.loads(lines[1].strip())
+    m = int(lines[2].strip())
+    n = int(lines[3].strip())
+    target = int(lines[4].strip())
+    ans = s.minCost(houses, cost, m, n, target)
+    print(ans)
+    assert ans == 1000000
     # return
 
     houses = [0, 2, 1, 2, 0]
@@ -99,7 +148,6 @@ def main():
     ans = s.minCost(houses, cost, m, n, target)
     print(ans)
     assert ans == 11
-    return
 
     houses = [0, 0, 0, 0, 0]
     cost = [[1, 10], [10, 1], [10, 1], [1, 10], [5, 1]]
