@@ -91,27 +91,6 @@ class Solution(object):
         print("new tuples", n)
         return n
 
-    def decrease2(self, tuples):
-        print("decrease tuples", tuples)
-        v = []
-        for i, t in enumerate(tuples[:-1]):
-            v.append(t[1] - tuples[i + 1][0])
-
-        i = v.index(min(v))
-        t = [tuples[i][0], tuples[i + 1][1]]
-
-        v = [
-            t[1] - t[0],
-            tuples[i][1] - tuples[i][0],
-            tuples[i + 1][1] - tuples[i + 1][0],
-        ]
-        j = v.index(max(v))
-        if j != 0:
-            t = tuples[i + j - 1]
-        n = tuples[:i] + [t] + tuples[i + 2 :]
-        print("new tuples", n)
-        return n
-
 
 def main():
     s = Solution()
