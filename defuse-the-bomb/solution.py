@@ -54,19 +54,19 @@ class Solution:
         >>> s.decrypt([2,4,9,3] , -2)
         [12, 5, 6, 13]
         """
-        if k == 0:
-            return [0] * len(code)
-
         if k > 0:
+            order = 1
+            offset = 1
             origin = code[:] + code[:]
-            for i, _ in enumerate(code):
-                code[i] = sum(origin[i + 1 : i + k + 1])
-            return code
+        elif k < 0:
+            order = -1
+            offset = len(code) - 1
+            origin = code[:] + code[:]
+        else:
+            order = 1
+            offset = 1
+            origin = [0] * len(code) * 2
 
-        ## k < 0
-        origin = code[:] + code[:]
-        # print(origin)
         for i, _ in enumerate(code):
-            # print(i - 1 + len(code), i - 1 + len(code) + k)
-            code[i] = sum(origin[i - 1 + len(code) : i - 1 + len(code) + k : -1])
+            code[i] = sum(origin[i + offset : i + k + offset : order])
         return code
