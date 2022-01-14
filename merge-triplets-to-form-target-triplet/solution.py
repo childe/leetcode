@@ -75,7 +75,9 @@ class Solution:
         a = set()
         for triplet in triplets:
             r = self.compare(triplet, target)
-            if r is not False:
+            if r:
                 a.update(set(r))
+                if a == {0, 1, 2}:
+                    return True
 
-        return a == {0, 1, 2}
+        return False
