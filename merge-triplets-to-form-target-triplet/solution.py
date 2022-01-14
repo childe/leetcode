@@ -50,6 +50,16 @@ from functools import reduce
 
 
 class Solution:
+    def compare(self, triplet: list[int], target: list[int]):
+        eq = []
+        for i in range(3):
+            if triplet[i] > target[i]:
+                return False
+            if triplet[i] == target[i]:
+                eq.append(i)
+
+        return eq
+
     def mergeTriplets(self, triplets: list[list[int]], target: list[int]) -> bool:
         """
         >>> s = Solution()
@@ -62,19 +72,10 @@ class Solution:
         >>> s.mergeTriplets([[1,3,1]], [1,3,2])
         False
         """
-        all_set = set(range(len(triplets)))
-        for j in range(3):
-            t = target[j]
-            for i, triplet in enumerate(triplets):
-                if i in all_set and triplet[j] > t:
-                    all_set.remove(i)
+        a = set()
+        for triplet in triplets:
+            r = self.compare(triplet, target)
+            if r is not False:
+                a.update(set(r))
 
-        # print(all_set)
-
-        r = True if len(all_set) > 0 else False
-        for j in range(3):
-            t = [e[j] for i, e in enumerate(triplets) if i in all_set]
-            if t and max(t) != target[j]:
-                return False
-
-        return r
+        return a == {0, 1, 2}
