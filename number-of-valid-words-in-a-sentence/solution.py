@@ -61,28 +61,16 @@ class Solution:
         False
         >>> s.if_valid_word('dog')
         True
+        >>> s.if_valid_word('dog-cat')
+        True
+        >>> s.if_valid_word('dog--cat')
+        False
+        >>> s.if_valid_word('!')
+        True
         """
-        l = len(word)
-        hyphen_count = 0
-        for i, c in enumerate(word):
-            if "0" <= c <= "9":
-                return False
-            if c in (".", ",", "!"):
-                if i == l - 1:
-                    return True
-                return False
-            if c == "-":
-                if hyphen_count == 1:
-                    return False
-                if i == 0 or i == l - 1:
-                    return False
-                if word[i - 1] < "a" or word[i - 1] > "z":
-                    return False
-                if word[i + 1] < "a" or word[i + 1] > "z":
-                    return False
-                hyphen_count += 1
+        import re
 
-        return True
+        return re.match(r"^([a-z]+(\-[a-z])?[a-z]*[,.!]?$)|(^[,.!]$)", word) is not None
 
     def countValidWords(self, sentence: str) -> int:
         """
