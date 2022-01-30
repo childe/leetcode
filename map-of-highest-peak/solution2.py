@@ -43,47 +43,22 @@ from collections import deque
 
 
 class Solution:
-    def update_arround_cells(self, x, y, height, heights):
-        for nx, ny in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):
-            if (
-                0 <= nx < self.width
-                and 0 <= ny < self.height
-                and heights[nx][ny] is None
-            ):
-                heights[nx][ny] = height + 1
-
-                self.this_level.insert(0, (nx, ny, height + 1))
-
     def highestPeak(self, isWater: list[list[int]]) -> list[list[int]]:
-        """
-        >>> s= Solution()
-        >>> s.highestPeak(isWater = [[0,1],[0,0]])
-        [[1, 0], [2, 1]]
-        >>> s.highestPeak(isWater = [[0,0,1],[1,0,0],[0,0,0]])
-        [[1, 1, 0], [0, 1, 1], [1, 2, 2]]
-        """
-
-        self.height, self.width = len(isWater), len(isWater[0])
-
-        heights = []
-        for i, row in enumerate(isWater):
-            heights.append([])
-            for j, cell in enumerate(row):
-                heights[i].append(None)
-
-        self.this_level = []
-        for i, row in enumerate(isWater):
-            for j, cell in enumerate(row):
-                if cell == 1:
-                    self.this_level.insert(0, (i, j, 0))
-                    heights[i][j] = 0
-
-        # print(self.this_level)
-        while self.this_level:
-            x, y, height = self.this_level.pop()
-            self.update_arround_cells(x, y, height, heights)
-
-        return heights
+        m, n = len(isWater), len(isWater[0])
+        ans = [[water - 1 for water in row] for row in isWater]
+        q = deque(
+            (i, j)
+            for i, row in enumerate(isWater)
+            for j, water in enumerate(row)
+            if water
+        )  # 将所有水域入队
+        while q:
+            i, j = q.popleft()
+            for x, y in ((i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)):
+                if 0 <= x < m and 0 <= y < n and ans[x][y] == -1:
+                    ans[x][y] = ans[i][j] + 1
+                    q.append((x, y))
+        return ans
 
 
 def main():
