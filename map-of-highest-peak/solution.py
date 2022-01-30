@@ -44,7 +44,6 @@ from collections import deque
 
 class Solution:
     def update_arround_cells(self, x, y, height, heights):
-        updated = []
         for nx, ny in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):
             if (
                 0 <= nx < self.width
@@ -53,9 +52,7 @@ class Solution:
             ):
                 heights[nx][ny] = height + 1
 
-                updated.append((nx, ny, height + 1))
-
-        return updated
+                self.this_level.insert(0, (nx, ny, height + 1))
 
     def highestPeak(self, isWater: list[list[int]]) -> list[list[int]]:
         """
@@ -84,8 +81,7 @@ class Solution:
         # print(self.this_level)
         while self.this_level:
             x, y, height = self.this_level.pop()
-            for n in self.update_arround_cells(x, y, height, heights):
-                self.this_level.insert(0, n)
+            self.update_arround_cells(x, y, height, heights)
 
         return heights
 
