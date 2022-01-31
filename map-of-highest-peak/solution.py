@@ -52,7 +52,7 @@ class Solution:
             ):
                 heights[nx][ny] = height + 1
 
-                self.this_level.insert(0, (nx, ny, height + 1))
+                self.this_level.append((nx, ny, height + 1))
 
     def highestPeak(self, isWater: list[list[int]]) -> list[list[int]]:
         """
@@ -71,17 +71,20 @@ class Solution:
             for j, cell in enumerate(row):
                 heights[i].append(None)
 
-        self.this_level = []
+        self.this_level = deque()
         for i, row in enumerate(isWater):
             for j, cell in enumerate(row):
                 if cell == 1:
-                    self.this_level.insert(0, (i, j, 0))
+                    self.this_level.append((i, j, 0))
                     heights[i][j] = 0
 
         # print(self.this_level)
         while self.this_level:
-            x, y, height = self.this_level.pop()
+            # print(self.this_level)
+            x, y, height = self.this_level.popleft()
+            # print(x, y, height)
             self.update_arround_cells(x, y, height, heights)
+            # print(heights)
 
         return heights
 
