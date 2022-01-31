@@ -89,12 +89,12 @@ class Solution:
 
 def main():
     s = Solution()
-    # isWater = []
-    # for _ in range(1024):
-    # isWater.append([0] * 1024)
-    # isWater[0][0] = 1
-    # s.highestPeak(isWater=isWater)
-    s.highestPeak(s.highestPeak(isWater=[[0, 0], [1, 1], [1, 0]]))
+    isWater = []
+    for _ in range(1024):
+        isWater.append([0] * 1024)
+    isWater[0][0] = 1
+    s.highestPeak(isWater=isWater)
+    # s.highestPeak(s.highestPeak(isWater=[[0, 0], [1, 1], [1, 0]]))
 
 
 if __name__ == "__main__":
