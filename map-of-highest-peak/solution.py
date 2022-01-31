@@ -61,9 +61,13 @@ class Solution:
         [[1, 0], [2, 1]]
         >>> s.highestPeak(isWater = [[0,0,1],[1,0,0],[0,0,0]])
         [[1, 1, 0], [0, 1, 1], [1, 2, 2]]
+        >>> s.highestPeak(isWater = [[0,0],[1,1],[1,0]])
+        [[1, 1], [0, 0], [0, 1]]
         """
         h, w = len(isWater), len(isWater[0])
+        # print(h, w)
         heights = [[0 if water else None for water in row] for row in isWater]
+        # print(f"{heights=}")
         q = deque(
             (i, j, 0)
             for i, row in enumerate(isWater)
@@ -71,21 +75,26 @@ class Solution:
             if water
         )
         while q:
+            # print(q)
             x, y, height = q.popleft()
+            # print(x, y, height)
             for nx, ny in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):
-                if 0 <= nx < w and 0 <= ny < h and heights[nx][ny] is None:
+                # print(f"{nx=} {ny=}")
+                if 0 <= nx < h and 0 <= ny < w and heights[nx][ny] is None:
                     heights[nx][ny] = height + 1
                     q.append((nx, ny, height + 1))
+            # print(heights)
         return heights
 
 
 def main():
     s = Solution()
-    isWater = []
-    for _ in range(1024):
-        isWater.append([0] * 1024)
-    isWater[0][0] = 1
-    s.highestPeak(isWater=isWater)
+    # isWater = []
+    # for _ in range(1024):
+    # isWater.append([0] * 1024)
+    # isWater[0][0] = 1
+    # s.highestPeak(isWater=isWater)
+    s.highestPeak(s.highestPeak(isWater=[[0, 0], [1, 1], [1, 0]]))
 
 
 if __name__ == "__main__":
