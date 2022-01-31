@@ -62,46 +62,20 @@ class Solution:
         >>> s.highestPeak(isWater = [[0,0,1],[1,0,0],[0,0,0]])
         [[1, 1, 0], [0, 1, 1], [1, 2, 2]]
         """
-
-        self.height, self.width = len(isWater), len(isWater[0])
-
+        h, w = len(isWater), len(isWater[0])
         heights = [[0 if water else None for water in row] for row in isWater]
-        # heights = []
-        # for i, row in enumerate(isWater):
-        # heights.append([])
-        # for j, cell in enumerate(row):
-        # heights[i].append(None)
-
-        # self.this_level = deque()
-        # for i, row in enumerate(isWater):
-        # for j, cell in enumerate(row):
-        # if cell == 1:
-        # self.this_level.append((i, j, 0))
-        # heights[i][j] = 0
-        self.this_level = deque(
+        q = deque(
             (i, j, 0)
             for i, row in enumerate(isWater)
             for j, water in enumerate(row)
             if water
-        )  # 将所有水域入队
-
-        # print(self.this_level)
-        while self.this_level:
-            # print(self.this_level)
-            x, y, height = self.this_level.popleft()
-            # print(x, y, height)
-            # self.update_arround_cells(x, y, height, heights)
-            # print(heights)
+        )
+        while q:
+            x, y, height = q.popleft()
             for nx, ny in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):
-                if (
-                    0 <= nx < self.width
-                    and 0 <= ny < self.height
-                    and heights[nx][ny] is None
-                ):
+                if 0 <= nx < w and 0 <= ny < h and heights[nx][ny] is None:
                     heights[nx][ny] = height + 1
-
-                    self.this_level.append((nx, ny, height + 1))
-
+                    q.append((nx, ny, height + 1))
         return heights
 
 
