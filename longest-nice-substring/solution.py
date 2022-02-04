@@ -39,6 +39,11 @@ s consists of uppercase and lowercase English letters.
 
 
 class Solution:
+    def isNiceLetter(self, c: str, s: str) -> bool:
+        if c.islower():
+            return c.upper() in s
+        return c.lower() in s
+
     def longestNiceSubstring(self, s: str) -> str:
         """
         >>> s = Solution()
@@ -49,34 +54,19 @@ class Solution:
         >>> s.longestNiceSubstring(s = "c")
         ''
         """
-        Z = ord("Z")
+        if s == "":
+            return ""
 
-        def normalize(x):
-            return x if x <= Z else -x + 32
+        for i, c in enumerate(s):
+            if not self.isNiceLetter(c, s):
+                left = self.longestNiceSubstring(s[:i])
+                right = self.longestNiceSubstring(s[i + 1 :])
 
-        m = {}
-        for c in s:
-            m[normalize(ord(c))] = True
-        # print(m)
-
-        flags = [1 if m.get(-normalize(ord(c)), False) else 0 for c in s]
-        # print(flags)
-
-        i, j, l, max_length = 0, 0, len(flags), 0
-        start, end = 0, 0
-        flags.append(2)
-        while j < l:
-            i = j
-            while flags[j] == 1:
-                j += 1
-            if j - i > max_length:
-                max_length = j - i
-                start, end = i, j
-                i = j
-            while flags[j] == 0:
-                j += 1
-
-        return s[start:end]
+                if len(left) >= len(right):
+                    return left
+                else:
+                    return right
+        return s
 
 
 def main():
