@@ -45,12 +45,13 @@ class Solution:
         >>> s.sumOfUnique([1,2,3,4,5])
         15
         """
-        s = dict()
-        ans = 0
+        arr = [0] * 101
         for n in nums:
-            s.setdefault(n, 0)
-            s[n] += 1
-        for n, count in s.items():
-            if count == 1:
-                ans += n
+            arr[n] += 1
+
+        ans = 0
+        for i, n in enumerate(arr):
+            if n == 1:
+                ans += i
+
         return ans
