@@ -39,3 +39,17 @@ class Solution:
         >>> s.singleNonDuplicate([3,3,7,7,10,11,11])
         10
         """
+
+        def findSingle(start: int, end: int) -> int | None:
+            if (start - end) % 2 == 1:
+                return None
+            if start == end:
+                return nums[start]
+            mid = (start + end) // 2
+            return (
+                findSingle(start, mid - 1) or findSingle(mid + 2, end)
+                if nums[mid] == nums[mid + 1]
+                else findSingle(start, mid) or findSingle(mid + 1, end)
+            )
+
+        return findSingle(0, len(nums) - 1) or 0
