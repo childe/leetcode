@@ -43,25 +43,17 @@ class Solution:
         >>> s.isOneBitCharacter([1,1,1,0])
         False
         """
-
-        def recursion(i: int) -> bool:
+        s = [len(bits) - 2]
+        while s:
+            i = s.pop()
             if i == -1:
                 return True
 
-            if i == 0:
-                if bits[i] == 0:
-                    return True
-                else:
-                    return False
-
-            r = []
             if bits[i] == 0:
-                r.append(recursion(i - 1))
-                if bits[i - 1] == 1:
-                    r.append(recursion(i - 2))
+                s.append(i - 1)
+                if i >= 1 and bits[i - 1] == 1:
+                    s.append(i - 2)
             else:
-                if bits[i - 1] == 1:
-                    r.append(recursion(i - 2))
-            return any(r)
-
-        return recursion(len(bits) - 2)
+                if i >= 1 and bits[i - 1] == 1:
+                    s.append(i - 2)
+        return False
