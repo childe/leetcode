@@ -59,23 +59,31 @@ class Solution:
         []
         """
 
-        def non_decreasing(start, end):
-            for i in range(start, end):
-                if security[i] > security[i + 1]:
-                    return False
-            return True
+        decreasing_count_before_i = []
+        for i, n in enumerate(security):
+            if i == 0:
+                decreasing_count_before_i.append(0)
+            else:
+                if n <= security[i - 1]:
+                    decreasing_count_before_i.append(decreasing_count_before_i[-1] + 1)
+                else:
+                    decreasing_count_before_i.append(0)
 
-        def non_increasing(start, end):
-            for i in range(start, end):
-                if security[i] < security[i + 1]:
-                    return False
-            return True
+        increasing_count_after_i = [0]
+        for i in range(len(security) - 2, -1, -1):
+            if security[i] <= security[i + 1]:
+                increasing_count_after_i.append(increasing_count_after_i[-1] + 1)
+            else:
+                increasing_count_after_i.append(0)
+        increasing_count_after_i.reverse()
 
+        # print(decreasing_count_before_i)
+        # print(increasing_count_after_i)
         ans = []
-
-        for i in range(time, len(security) - time):
-            # print(i, i - time, i + time)
-            if non_increasing(i - time, i) and non_decreasing(i, i + time):
+        for i in range(len(security)):
+            if (
+                decreasing_count_before_i[i] >= time
+                and increasing_count_after_i[i] >= time
+            ):
                 ans.append(i)
-
         return ans
