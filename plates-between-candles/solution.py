@@ -52,6 +52,7 @@ class Solution:
         >>> s.platesBetweenCandles("***|**|*****|**||**|*", [[1,17],[4,5],[14,17],[5,11],[15,16]])
         [9, 0, 0, 0, 0]
         """
+        nums = [int(i == "*") for i in s]
         most_left, left = -1, []
         for i, c in enumerate(s):
             if c == "|":
@@ -67,10 +68,8 @@ class Solution:
 
         ans = []
         for q in queries:
-            count = 0
-            for i in range(q[0], q[1] + 1):
-                if s[i] == "*" and left[i] >= q[0] and right[i] <= q[1]:
-                    count += 1
-            ans.append(count)
+            first_candle = right[q[0]]
+            last_candle = left[q[1]]
+            ans.append(sum(nums[first_candle : last_candle + 1]))
 
         return ans
