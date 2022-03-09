@@ -52,24 +52,40 @@ class Solution:
         >>> s.platesBetweenCandles("***|**|*****|**||**|*", [[1,17],[4,5],[14,17],[5,11],[15,16]])
         [9, 0, 0, 0, 0]
         """
-        nums = [int(i == "*") for i in s]
+        length = len(s)
+
+        # left[i]：第 i 个盘子左边的离它最近的蜡烛，如果是 -1，说明它左边没有蜡烛
         most_left, left = -1, []
         for i, c in enumerate(s):
             if c == "|":
                 most_left = i
             left.append(most_left)
 
-        most_right, right = len(s), [len(s)] * len(s)
-        for i in range(len(s) - 1, -1, -1):
+        most_right, right = length, [length] * length
+        for i in range(length - 1, -1, -1):
             if s[i] == "|":
                 most_right = i
             right[i] = most_right
-        # print(left, right)
+
+        # left_plate_count[i]: 第 i 个蜡烛左边有多少个盘子
+        left_plate_count = [0] * length
+        count = 0
+        for i, c in enumerate(s):
+            if c == "*":
+                count += 1
+            else:
+                left_plate_count[i] = count
 
         ans = []
-        for q in queries:
-            first_candle = right[q[0]]
-            last_candle = left[q[1]]
-            ans.append(sum(nums[first_candle : last_candle + 1]))
+        for i, q in enumerate(queries):
+            # print(f"{i}/{len(queries)}")
+            # print(f"{q=}")
+            l, r = right[q[0]], left[q[1]]
+            if l >= r:
+                count = 0
+            else:
+                count = left_plate_count[r] - left_plate_count[l]
+            # print(l, r, count)
+            ans.append(count)
 
         return ans
