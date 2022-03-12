@@ -39,14 +39,28 @@ class Node:
 
 
 class Solution:
-    def postorder(self, nodes: list[int | None]) -> list[int]:
+    def postorder(self, root: "Node") -> list[int]:
         """
         >>> s = Solution()
-        >>> s.postorder([1, None, 3, 2, 4, None, 5, 6])
+        >>> s.postorder(s.gen_tree([1, None, 3, 2, 4, None, 5, 6]))
         [5, 6, 3, 2, 4, 1]
-        >>> s.postorder([1, None, 2, 3, 4, 5, None, None, 6, 7, None, 8, None, 9, 10, None, None, 11, None, 12, None, 13, None, None, 14])
+        >>> s.postorder(s.gen_tree([1, None, 2, 3, 4, 5, None, None, 6, 7, None, 8, None, 9, 10, None, None, 11, None, 12, None, 13, None, None, 14]))
         [2, 6, 14, 11, 7, 3, 12, 8, 4, 13, 9, 10, 5, 1]
         """
+        ans = []
+        s: list[tuple["Node", int]] = [(root, 0)]
+        while s:
+            node, count = s.pop()
+            if count == 1:
+                ans.append(node.val)
+            else:
+                s.append((node, 1))
+                for child in node.children[::-1]:
+                    s.append((child, 0))
+
+        return ans
+
+    def gen_tree(self, nodes):
         root = Node(nodes[0], [])
         candidate_list = [root]
         current = root
@@ -58,15 +72,4 @@ class Solution:
                 candidate_list.insert(0, node)
                 current.children.append(node)
 
-        # print([e.val for e in root.children])
-
-        ans = []
-
-        def rec(node):
-            nonlocal ans
-            for child in node.children:
-                rec(child)
-            ans.append(node.val)
-
-        rec(root)
-        return ans
+        return root
