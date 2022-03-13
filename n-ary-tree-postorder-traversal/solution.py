@@ -39,6 +39,29 @@ class Node:
 
 
 class Solution:
+    def preorder(self, root: "Node") -> list[int]:
+        """
+        >>> s = Solution()
+        >>> s.preorder(s.gen_tree([1, None, 3, 2, 4, None, 5, 6]))
+        [1, 3, 2, 4, 5, 6]
+        >>> s.preorder(s.gen_tree([1, None, 2, 3, 4, 5, None, None, 6, 7, None, 8, None, 9, 10, None, None, 11, None, 12, None, 13, None, None, 14]))
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        """
+        ans = []
+
+        def fn(node):
+            ans.append(node.val)
+
+        s: list["Node"] = [root]
+        while s:
+            node = s.pop()
+            fn(node)
+            if node.children is not None:
+                for child in node.children:
+                    s.insert(0, child)
+
+        return ans
+
     def postorder(self, root: "Node") -> list[int]:
         """
         >>> s = Solution()
@@ -48,15 +71,20 @@ class Solution:
         [2, 6, 14, 11, 7, 3, 12, 8, 4, 13, 9, 10, 5, 1]
         """
         ans = []
+
+        def fn(node):
+            ans.append(node.val)
+
         s: list[tuple["Node", int]] = [(root, 0)]
         while s:
             node, count = s.pop()
             if count == 1:
-                ans.append(node.val)
+                fn(node)
             else:
                 s.append((node, 1))
-                for child in node.children[::-1]:
-                    s.append((child, 0))
+                if node.children is not None:
+                    for child in node.children[::-1]:
+                        s.append((child, 0))
 
         return ans
 
