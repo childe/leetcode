@@ -32,7 +32,7 @@ https://leetcode-cn.com/problems/binary-gap/
 
 提示：
 
-1 <= n <= 109
+1 <= n <= 10^9
 
 来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/binary-gap
@@ -51,18 +51,14 @@ class Solution:
         >>> s.binaryGap(5)
         2
         """
-        has_one = False
-        ans = 0
-        distance = 0
-        while n:
-            if n % 2 == 1:
-                if has_one:
-                    ans = max(ans, distance)
-                has_one = True
-                distance = 1
-            else:
-                if has_one:
-                    distance += 1
-            n //= 2
 
-        return ans
+        one_pos, i = [], 0
+        while n:
+            if n & 1:
+                one_pos.append(i)
+            n >>= 1
+            i += 1
+
+        if len(one_pos) < 2:
+            return 0
+        return max([one_pos[i + 1] - one_pos[i] for i in range(len(one_pos) - 1)])
