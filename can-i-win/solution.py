@@ -55,6 +55,8 @@ class Solution:
         """
         nums = list(range(1, maxChoosableInteger + 1))
 
+        if desiredTotal <= 1:
+            return True
         if sum(nums) < desiredTotal:
             return False
         if sum(nums) == desiredTotal:
@@ -66,6 +68,7 @@ class Solution:
                     if nums in c:
                         return c[nums]
                     r = f(nums, target)
+                    # print(f"nums={bin(nums)} {target=} {r=}")
                     c[nums] = r
                     return r
 
@@ -75,11 +78,39 @@ class Solution:
 
         @cache({})
         def dfs(nums, target) -> bool:
-            if nums[-1] >= target:
+            """
+            nums = 0b10011 equals (5,2,1)
+            """
+            # print(f"nums={bin(nums)} {target=}")
+
+            if (1 << (target - 1)) <= nums:
                 return True
-            for i, n in enumerate(nums):
-                if not dfs(tuple(nums[:i] + nums[i + 1 :]), target - n):
+
+            if target <= 0:
+                return True
+
+            n = 0
+            while (1 << n) <= nums:
+                num = 1 << n
+                # print(bin(num), bin(nums & (~num)), n + 1)
+                if nums & num == 0:
+                    n += 1
+                    continue
+
+                if not dfs(nums & (~num), target - (n + 1)):
                     return True
+
+                n += 1
+
             return False
 
-        return dfs(tuple(nums), desiredTotal)
+        return dfs(int("1" * maxChoosableInteger, 2), desiredTotal)
+
+
+def main():
+    s = Solution()
+    print(s.canIWin(2, 2))
+
+
+if __name__ == "__main__":
+    main()
