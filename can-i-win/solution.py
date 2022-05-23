@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-https://leetcode.com/problems/can-i-win/description/
+https://leetcode.cn/problems/can-i-win/
 
 In the "100 game," two players take turns adding, to a running total, any integer from 1..10. The player who first causes the running total to reach or exceed 100 wins.
 
@@ -39,7 +39,7 @@ class Solution:
         >>> s.canIWin(10, 20)
         True
         >>> s.canIWin(10, 11)
-        True
+        False
         >>> s.canIWin(10, 40)
         False
         >>> s.canIWin(4, 6)
@@ -58,7 +58,7 @@ class Solution:
         if sum(nums) < desiredTotal:
             return False
         if sum(nums) == desiredTotal:
-            return True
+            return maxChoosableInteger % 2 == 1
 
         def cache(c):
             def wrapper(f):
@@ -75,7 +75,7 @@ class Solution:
 
         @cache({})
         def dfs(nums, target) -> bool:
-            if nums[0] >= target:
+            if nums[-1] >= target:
                 return True
             for i, n in enumerate(nums):
                 if not dfs(tuple(nums[:i] + nums[i + 1 :]), target - n):
