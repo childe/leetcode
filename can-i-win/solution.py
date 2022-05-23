@@ -32,42 +32,14 @@ Same with other integers chosen by the first player, the second player will alwa
 """
 
 
-class Solution(object):
-    def canWin(self, restPool, total):
-        if total <= max(restPool):
-            return True
-
-        r = self.visited.get(restPool)
-        if r is not None:
-            return r
-
-        for i, e in enumerate(restPool):
-            t = tuple(restPool[:i]+restPool[i+1:])
-            r = self.visited.get(t)
-            if r is False:
-                self.visited[restPool] = True
-                return True
-            if r is True:
-                continue
-
-            if not self.canWin(t, total-e):
-                self.visited[restPool] = True
-                return True
-        self.visited[restPool] = False
-        return False
-
-    def canIWin(self, maxChoosableInteger, desiredTotal):
+class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -> bool:
         """
-        :type maxChoosableInteger: int
-        :type desiredTotal: int
-        :rtype: bool
         >>> s = Solution()
-        >>> s.canIWin(2, 10)
-        False
         >>> s.canIWin(10, 20)
         True
         >>> s.canIWin(10, 11)
-        False
+        True
         >>> s.canIWin(10, 40)
         False
         >>> s.canIWin(4, 6)
@@ -81,18 +53,33 @@ class Solution(object):
         >>> s.canIWin(19, 190)
         True
         """
-        if maxChoosableInteger*(1+maxChoosableInteger)/2 < desiredTotal:
+        nums = list(range(1, maxChoosableInteger + 1))
+
+        if sum(nums) < desiredTotal:
             return False
-        if maxChoosableInteger*(1+maxChoosableInteger)/2 == desiredTotal:
-            return maxChoosableInteger % 2 == 1
-        self.visited = {}
-        return self.canWin(tuple(range(maxChoosableInteger, 0 , -1)), desiredTotal)
+        if sum(nums) == desiredTotal:
+            return True
 
+        def cache(c):
+            def wrapper(f):
+                def inner(nums, target):
+                    if nums in c:
+                        return c[nums]
+                    r = f(nums, target)
+                    c[nums] = r
+                    return r
 
-def main():
-    s = Solution()
-    print s.canIWin(19, 190)
+                return inner
 
+            return wrapper
 
-if __name__ == '__main__':
-    main()
+        @cache({})
+        def dfs(nums, target) -> bool:
+            if nums[0] >= target:
+                return True
+            for i, n in enumerate(nums):
+                if not dfs(tuple(nums[:i] + nums[i + 1 :]), target - n):
+                    return True
+            return False
+
+        return dfs(tuple(nums), desiredTotal)
