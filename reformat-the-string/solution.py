@@ -4,41 +4,58 @@
 https://leetcode.cn/problems/reformat-the-string/
 """
 
+from collections import deque
+
 
 class Solution:
     def reformat(self, s: str) -> str:
         """
         >>> s=Solution()
         >>> s.reformat("a0b1c2")
-        "0a1b2c"
+        'a0b1c2'
         >>> s.reformat("leetcode")
-        ""
+        ''
         >>> s.reformat("1229857369")
-        ""
+        ''
         >>> s.reformat("covid2019")
-        "c2o0v1i9d"
+        'c2o0v1i9d'
         >>> s.reformat("ab123")
-        "1a2b3"
+        '3a1b2'
         """
-        alphabet = ""
-        num = ""
+        ans = ""
+        alphabet = deque()
+        num = deque()
+        state = 0
         for c in s:
             if "a" <= c <= "z":
-                alphabet += c
+                if state != 1:
+                    ans += c
+                    state = 1
+                    if num:
+                        ans += num.popleft()
+                        state = 2
+                else:
+                    alphabet.append(c)
             else:
-                num += c
-        d = len(alphabet) - len(num)
-        if d > 1 or d < -1:
+                if state != 2:
+                    ans += c
+                    state = 2
+                    if alphabet:
+                        ans += alphabet.popleft()
+                        state = 1
+                else:
+                    num.append(c)
+
+        if len(alphabet) > 1 or len(num) > 1:
             return ""
 
-        ans = ""
-        while alphabet and num:
-            ans += alphabet[0]
-            alphabet = alphabet[1:]
-            ans += num[0]
-            num = num[1:]
         if alphabet:
-            ans += alphabet[0]
+            if "a" <= ans[0] <= "z":
+                return ""
+            return alphabet.popleft() + ans
         if num:
-            ans = num[0] + ans
+            if "0" <= ans[0] <= "9":
+                return ""
+            return num.popleft() + ans
+
         return ans
