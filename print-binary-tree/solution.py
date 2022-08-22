@@ -46,4 +46,10 @@ class TreeNode:
         self.left = left
         self.right = right
 class Solution:
-    def printTree(self, root: Optional[TreeNode]) -> List[List[str]]:
+    def printTree(self, root: TreeNode|None) -> list[list[str]]:
+        if root is None:
+            return []
+
+        rst = []
+
+        return rst
