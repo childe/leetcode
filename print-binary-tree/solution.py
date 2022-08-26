@@ -83,7 +83,7 @@ class Solution:
         height = self.height(root)
         rst = []
         col_count = 2 ** (height + 1) - 1
-        for i in range(height+1):
+        for _ in range(height+1):
             rst.append([""] * col_count)
 
         def putNode(node: TreeNode, height: int, left: int, right: int):
