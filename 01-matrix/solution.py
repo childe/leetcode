@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 https://leetcode-cn.com/problems/01-matrix/
 
 Given a matrix consists of 0 and 1, find the distance of the nearest 0 for each cell.
@@ -38,69 +38,57 @@ Note:
 The number of elements of the given matrix will not exceed 10,000.
 There are at least one 0 in the given matrix.
 The cells are adjacent in only four directions: up, down, left and right.
-'''
+"""
 
 
 class Solution(object):
-    def updateMatrix(self, matrix):
+    def updateMatrix(self, matrix: list[list[int]]) -> list[list[int]]:
         """
-        :type matrix: List[List[int]]
-        :rtype: List[List[int]]
+        >>> s= Solution()
+        >>> s.updateMatrix([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
+        [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+        >>> s.updateMatrix([[0, 0, 0], [0, 1, 0], [1, 1, 1]])
+        [[0, 0, 0], [0, 1, 0], [1, 2, 1]]
+        >>> s.updateMatrix([[0,1,0],[0,1,0],[0,1,0],[0,1,0],[0,1,0]])
+        [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]]
         """
 
-        for i, row in enumerate(matrix):
-            for j, c in enumerate(row):
-                if c != 0:
-                    row[j] = len(matrix) + len(row) + 1
+        m, n = len(matrix), len(matrix[0])
 
-        current = 0
-        changed = True
+        def valid(x: int, y: int) -> bool:
+            return 0 <= x < m and 0 <= y < n
 
-        while changed:
-            changed = False
-            for i, row in enumerate(matrix):
-                for j, c in enumerate(row):
-                    if c != current:
-                        continue
+        batch = set()
+        # next_batch = set()
 
-                    # up
-                    if i > 0 and matrix[i-1][j] > current+1:
-                        matrix[i-1][j] = current+1
-                        changed = True
+        def visit(x: int, y: int):
+            v = matrix[x][y]
+            for nx, ny in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):
+                if not valid(nx, ny):
+                    continue
 
-                    # down
-                    if i < len(matrix)-1 and matrix[i+1][j] > current+1:
-                        matrix[i+1][j] = current+1
-                        changed = True
+                if matrix[nx][ny] == 0:
+                    continue
 
-                    # left
-                    if j > 0 and matrix[i][j-1] > current+1:
-                        matrix[i][j-1] = current+1
-                        changed = True
+                if matrix[nx][ny] == 1:
+                    matrix[nx][ny] = -(abs(v) + 1)
+                    batch.add((nx, ny))
+                else:
+                    if abs(v) + 1 < abs(matrix[nx][ny]):
+                        matrix[nx][ny] = -(abs(v) + 1)
+                        batch.add((nx, ny))
 
-                    # right
-                    if j < len(row)-1 and matrix[i][j+1] > current+1:
-                        matrix[i][j+1] = current+1
-                        changed = True
+        for x, row in enumerate(matrix):
+            for y, v in enumerate(row):
+                if v == 0:
+                    batch.add((x, y))
 
-            current+=1
+        while batch:
+            x, y = batch.pop()
+            visit(x, y)
+
+        for x, row in enumerate(matrix):
+            for y, v in enumerate(row):
+                row[y] = abs(v)
+
         return matrix
-
-def main():
-    s = Solution()
-
-    matrix = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
-    output = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
-    s.updateMatrix(matrix)
-    print(matrix)
-    assert(output == matrix)
-
-    matrix = [[0, 0, 0], [0, 1, 0], [1, 1, 1]]
-    output = [[0, 0, 0], [0, 1, 0], [1, 2, 1]]
-    s.updateMatrix(matrix)
-    print(matrix)
-    assert(output == matrix)
-
-
-if __name__ == '__main__':
-    main()
