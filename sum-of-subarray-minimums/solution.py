@@ -42,13 +42,14 @@ class MinStack(object):
 
     def pop(self):
         if self.s[-1] == self.minS[-1]:
-            self.minS = self.minS[:-1]
+            self.minS.pop()
 
-        r = self.s[-1]
-        self.s = self.s[:-1]
-        return r
+        return self.s.pop()
 
-    def min(self):
+    def top(self):
+        return self.s[-1]
+
+    def getMin(self):
         return self.minS[-1]
 
 
@@ -60,36 +61,18 @@ class Solution:
         17
         >>> s.sumSubarrayMins([11,81,94,43,3])
         444
+        >>> s.sumSubarrayMins([1,1,1,2])
+        11
         """
         s = 0
 
-        arr.sort()
-
-        cache = {}
-
-        def c(n, i):
-            if i == 0:
-                return 1
-            if n < i:
-                return 0
-            if (n, i) in cache:
-                return cache[(n, i)]
-            r = n * c(n - 1, i - 1) // i
-            cache[(n, i)] = r
-            return r
-
         for i, n in enumerate(arr):
-            print(f"{i=} {n=}")
-            current_len = len(arr) - i
-            for j in range(1, current_len + 1):
-                s += (c(current_len, j) - c(current_len - 1, j)) * n
-                print(f"{j=} {current_len=} {s=}")
+            subArr = arr[i:]
+            minStack = MinStack()
+            for n in subArr:
+                minStack.push(n)
+            while minStack.s:
+                s += minStack.getMin()
+                minStack.pop()
 
-            print(f"=== {s=} {i=} {n=}")
-
-        return s
-
-
-s = Solution()
-r = s.sumSubarrayMins([1, 2, 3, 4])
-print(r)
+        return s % (10**9 + 7)
