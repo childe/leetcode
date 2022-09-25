@@ -30,29 +30,6 @@ https://leetcode.cn/problems/sum-of-subarray-minimums/
 """
 
 
-class MinStack(object):
-    def __init__(self):
-        self.s = []
-        self.minS = []
-
-    def push(self, x):
-        self.s.append(x)
-        if not self.minS or x <= self.minS[-1]:
-            self.minS.append(x)
-
-    def pop(self):
-        if self.s[-1] == self.minS[-1]:
-            self.minS.pop()
-
-        return self.s.pop()
-
-    def top(self):
-        return self.s[-1]
-
-    def getMin(self):
-        return self.minS[-1]
-
-
 class Solution:
     def sumSubarrayMins(self, arr: list[int]) -> int:
         """
@@ -64,15 +41,45 @@ class Solution:
         >>> s.sumSubarrayMins([1,1,1,2])
         11
         """
-        s = 0
 
-        for i, n in enumerate(arr):
-            subArr = arr[i:]
-            minStack = MinStack()
-            for n in subArr:
-                minStack.push(n)
-            while minStack.s:
-                s += minStack.getMin()
-                minStack.pop()
+        cache = {}
 
-        return s % (10**9 + 7)
+        def f(x):
+            return x * (x + 1) // 2
+
+        def c(left, right):
+            if (left, right) in cache:
+                return cache[(left, right)]
+            r = f(left + right + 1) - f(left) - f(right)
+            cache[(left, right)] = r
+            return r
+
+        ans = 0
+
+        """
+        stack是一个单调栈，里面存的是 [num,pc]，pc 是指左边的被它挤压出来的数字个数。
+        原始数组是[1,6,7,5,6,7,2,6,7], stack是[1,0],[6,0],[7,0] -> [1,0],[5,2] -> ...
+        """
+        stack = []
+        for n in arr:
+            # print(n,stack)
+            pop_count = 0
+            while stack and stack[-1][0] > n:
+                v, pc = stack.pop()
+                ans += c(pc, pop_count) * v
+                pop_count += pc+1
+
+            stack.append([n, pop_count])
+
+        """
+        [1,6,7,5,6,7,2,6,7] 最后的栈是 [(1,0),(2,5),(6,0),(7,0)]
+        pop_count 是针对原始数组来说，累积的 pop 出来的个数，比如到 (2,5) 时，pop 出来了 2 个, (1,0)时，pop 出来了 8 个
+        """
+        pop_count = 0
+        # print(stack)
+        while stack:
+            v, pc = stack.pop()
+            ans += c(pc, pop_count) * v
+            pop_count += pc + 1
+
+        return ans % (10**9 + 7)
