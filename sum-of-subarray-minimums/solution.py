@@ -50,6 +50,9 @@ class Solution:
 
         @cache
         def c(left, right):
+            """
+            对于[5,6,2,5,6,7] 这个数组，最小值是2，c函数就是求这个数组里面，包括2的子数组有几个。对这个数组来说，left=2,right=3
+            """
             return f(left + right + 1) - f(left) - f(right)
 
         ans = 0
