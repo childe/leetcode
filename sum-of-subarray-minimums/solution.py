@@ -29,6 +29,8 @@ https://leetcode.cn/problems/sum-of-subarray-minimums/
 1 <= arr[i] <= 3 * 10^4
 """
 
+from functools import cache
+
 
 class Solution:
     def sumSubarrayMins(self, arr: list[int]) -> int:
@@ -42,17 +44,13 @@ class Solution:
         11
         """
 
-        cache = {}
-
+        @cache
         def f(x):
             return x * (x + 1) // 2
 
+        @cache
         def c(left, right):
-            if (left, right) in cache:
-                return cache[(left, right)]
-            r = f(left + right + 1) - f(left) - f(right)
-            cache[(left, right)] = r
-            return r
+            return f(left + right + 1) - f(left) - f(right)
 
         ans = 0
 
@@ -67,7 +65,7 @@ class Solution:
             while stack and stack[-1][0] > n:
                 v, pc = stack.pop()
                 ans += c(pc, pop_count) * v
-                pop_count += pc+1
+                pop_count += pc + 1
 
             stack.append([n, pop_count])
 
