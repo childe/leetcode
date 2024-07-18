@@ -40,21 +40,15 @@ class Solution(object):
         >>> s.jump([1,2,3,4,2,2,3,1,3,4,6,7,2,1,3,3,1,3,1,2,3,6])
         8
         """
-        stepList = [0] * len(nums)
-        stepList[1:1+nums[0]] = [1] * (1+nums[0])
-        lastLargetestPoint = 0
-        for i, num in enumerate(nums[:-1]):
-            # print i, num, nums[lastLargetestPoint], lastLargetestPoint
-            if num <= nums[lastLargetestPoint] - (i-lastLargetestPoint):
-                continue
-            stepList[1+lastLargetestPoint+nums[lastLargetestPoint]:
-                     1+i+num] = [1+stepList[i]] * (i+num-lastLargetestPoint-nums[lastLargetestPoint])
-            lastLargetestPoint = i
-            # print stepList
-
-        return stepList[len(nums)-1]
+        rst = [len(nums) + 1] * len(nums)
+        rst[0] = 0
+        for i in range(0, len(nums)):
+            for j in range(1 + nums[i]):
+                rst[i + j] = min(rst[i] + 1, rst[i + j])
+                if i + j == len(nums) - 1:
+                    return rst[-1]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     s = Solution()
-    print s.jump([2, 3, 1, 1, 4])
+    print(s.jump([2, 3, 1, 1, 4]))
