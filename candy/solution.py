@@ -13,31 +13,30 @@ class Solution:
         rst = [0] * len(ratings)
         rst[0] = 1
 
-        def dfs(i):
+        i = 1
+        while i < len(ratings):
             # print(i, rst)
-            if i == len(ratings):
-                return
             if i == 0:
-                return dfs(i + 1)
-
+                i += 1
+                continue
             if ratings[i] > ratings[i - 1]:
                 rst[i] = max(rst[i - 1] + 1, rst[i])
-                return dfs(i + 1)
-
-            if ratings[i] == ratings[i - 1]:
+                i += 1
+            elif ratings[i] == ratings[i - 1]:
                 rst[i] = max(1, rst[i])
-                return dfs(i + 1)
+                i += 1
+            else:
+                if rst[i] >= rst[i - 1]:
+                    rst[i - 1] += 1
+                    i -= 1
+                else:
+                    rst[i] = max(min(rst[i - 1] - 1, 1), rst[i])
+                    if rst[i] == 0:
+                        rst[i - 1] += 1
+                        i -= 1
+                    else:
+                        i += 1
 
-            if rst[i] >= rst[i - 1]:
-                rst[i - 1] += 1
-                return dfs(i - 1)
-            rst[i] = max(min(rst[i - 1] - 1, 1), rst[i])
-            if rst[i] == 0:
-                rst[i - 1] += 1
-                return dfs(i - 1)
-            return dfs(i + 1)
-
-        dfs(1)
         # print(rst)
         return sum(rst)
 
