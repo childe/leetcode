@@ -33,7 +33,7 @@ class Solution(object):
 
         def try_clean_queue():
             """
-            尝试清理队列，如果最左边的字符数量多于t中出现的次数时，去掉
+            尝试清理队列，如果最左边的字符数量多于t中出现的次数时，去掉。相当于窗口左边向右移动。
             """
             while queue:
                 _, c = queue[0]
