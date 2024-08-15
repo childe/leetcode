@@ -27,15 +27,9 @@ class Solution:
         # print(st)
         s = 0
         while st:
-            i = st.pop()
-            if st:
-                o = st.pop()
-            else:
-                o = "+"
-            if o == "+":
-                s += i
-            elif o == "-":
-                s -= i
+            i = st.pop()  # int
+            o = st.pop() if st else "+"  # operator
+            s = s + i if o == "+" else s - i
         return s
 
     def calculate(self, s: str) -> int:
@@ -49,9 +43,8 @@ class Solution:
                 st.append(o)
             elif o == ")":
                 simple_st = []
-                while st[-1] != "(":
-                    simple_st.insert(0, st.pop())
-                st.pop()
+                while (l := st.pop()) != "(":
+                    simple_st.insert(0, l)
                 st.append(self.simple_calculate(simple_st))
             elif isinstance(o, str) and o in "+-*/":
                 st.append(o)
