@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''
+"""
 https://leetcode.com/problems/reverse-nodes-in-k-group/
 Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
 
@@ -17,7 +17,7 @@ Given this linked list: 1->2->3->4->5
 For k = 2, you should return: 2->1->4->3->5
 
 For k = 3, you should return: 3->2->1->4->5
-'''
+"""
 
 import unittest
 
@@ -27,47 +27,59 @@ import unittest
 class ListNode(object):
 
     def __init__(self, x):
-        self.val = x
-        self.next = None
+        self.val: int = x
+        self.next: ListNode | None = None
+
+    def __str__(self) -> str:
+        if self.next:
+            return f"{self.val}->{self.next.val}"
+        return f"{self.val}"
 
 
 class Solution(object):
-
-    def printList(self, head):
-        while head:
-            print head.val,
-            head = head.next
-        print
-
-    def reverseNextKGroup(self, head, k):
+    def reverseNextKGroup(self, head, k) -> tuple[ListNode, ListNode | None, bool]:
         """
-        :type head: ListNode
-        :type k: int
-        :rtype: ListNode,ListNode,ListNode(head, tail, nexthead)
+        return new_head, next_head, is_reversed
         >>> nodes = 0->1->2->3
-        >>> reverseNextKGroup(head,2)
+        >>> reverseNextKGroup(head,3)
         0<-1<-2 3
-        return 2,0,3
+        return 2, 3, True
 
         >>> nodes = 0->1
         >>> reverseNextKGroup(head,3)
         0->1
-        return 0,None,None
-        """
-        t = head
-        for i in range(k):
-            if t is None:
-                return head, None, None
-            t = t.next
+        return 0, None, False
 
-        pre = None
-        q = head
-        for i in range(k):
-            n = q.next
-            q.next = pre
-            pre = q
-            q = n
-        return pre, head, q
+        >>> nodes = 0->1->2
+        >>> reverseNextKGroup(head,3)
+        0<-1<-2
+        return 0, None, True
+        """
+
+        # t, _array_for_test = head, []
+        # while t:
+        # _array_for_test.append(t)
+        # t = t.next
+
+        if not head:
+            return head, None, False
+
+        t = head
+        for _ in range(k - 1):
+            t = t.next
+            if t is None:
+                return head, None, False
+
+        c = head
+        for _ in range(k - 1):
+            # print(",".join([str(node) for node in _array_for_test]))
+            n = head.next
+            head.next = n.next
+            n.next = c
+            c = n
+            # print(c)
+        # print(",".join([str(node) for node in _array_for_test]))
+        return c, head.next, True
 
     def reverseKGroup(self, head, k):
         """
@@ -75,18 +87,19 @@ class Solution(object):
         :type k: int
         :rtype: ListNode
         """
-        if not head or k <= 0:
+        if not head or k <= 1:
             return head
 
-        head, tail, nexthead = self.reverseNextKGroup(head, k)
-        if tail is None:
+        final_head, next_head, is_reversed = self.reverseNextKGroup(head, k)
+        if not is_reversed:
             return head
-        final_head = head
 
-        while tail is not None:
-            _head, _tail, _nexthead = self.reverseNextKGroup(nexthead, k)
-            tail.next = _head
-            tail, nexthead = _tail, _nexthead
+        last_tail = head
+        while is_reversed and next_head:
+            _t = next_head
+            new_head, next_head, is_reversed = self.reverseNextKGroup(next_head, k)
+            last_tail.next = new_head
+            last_tail = _t
 
         return final_head
 
@@ -120,33 +133,55 @@ class TestSolution(unittest.TestCase):
         s = Solution()
 
         l = self.createList(*range(1))
-        head, tail, nexthead = s.reverseNextKGroup(l, 3)
-        rst_head = self.createList(0)
-        self.assertEqual(self.NodeList2List(rst_head), self.NodeList2List(head))
-        self.assertEqual(tail, None)
+        head, nexthead, is_reversed = s.reverseNextKGroup(l, 1)
+        self.assertEqual(self.NodeList2List(head), [0])
+        self.assertEqual(head.val, 0)
         self.assertEqual(nexthead, None)
+        self.assertEqual(is_reversed, True)
+
+        l = self.createList(*range(1))
+        head, nexthead, is_reversed = s.reverseNextKGroup(l, 3)
+        self.assertEqual(self.NodeList2List(head), [0])
+        self.assertEqual(head.val, 0)
+        self.assertEqual(nexthead, None)
+        self.assertEqual(is_reversed, False)
 
         l = self.createList(*range(2))
-        head, tail, nexthead = s.reverseNextKGroup(l, 3)
-        rst_head = self.createList(0, 1)
-        self.assertEqual(self.NodeList2List(rst_head), self.NodeList2List(head))
-        self.assertEqual(tail, None)
+        head, nexthead, is_reversed = s.reverseNextKGroup(l, 3)
+        self.assertEqual(self.NodeList2List(head), [0, 1])
+        self.assertEqual(head.val, 0)
         self.assertEqual(nexthead, None)
+        self.assertEqual(is_reversed, False)
 
         l = self.createList(*range(3))
-        head, tail, nexthead = s.reverseNextKGroup(l, 3)
+        head, nexthead, is_reversed = s.reverseNextKGroup(l, 3)
         self.assertEqual(self.NodeList2List(head), [2, 1, 0])
-        self.assertEqual(self.NodeList2List(tail), [0])
-        self.assertEqual(self.NodeList2List(nexthead), [])
+        self.assertEqual(head.val, 2)
+        self.assertEqual(nexthead, None)
+        self.assertEqual(is_reversed, True)
 
-        l = self.createList(*range(8))
-        head, tail, nexthead = s.reverseNextKGroup(l, 3)
-        self.assertEqual(self.NodeList2List(head), [2, 1, 0])
-        self.assertEqual(self.NodeList2List(tail), [0])
-        self.assertEqual(self.NodeList2List(nexthead), [3, 4, 5, 6, 7])
+        l = self.createList(*range(4))
+        head, nexthead, is_reversed = s.reverseNextKGroup(l, 3)
+        self.assertEqual(self.NodeList2List(head), [2, 1, 0, 3])
+        self.assertEqual(head.val, 2)
+        assert nexthead is not None
+        self.assertEqual(nexthead.val, 3)
+        self.assertEqual(is_reversed, True)
+
+        l = self.createList(*range(5))
+        head, nexthead, is_reversed = s.reverseNextKGroup(l, 3)
+        self.assertEqual(self.NodeList2List(head), [2, 1, 0, 3, 4])
+        self.assertEqual(head.val, 2)
+        assert nexthead is not None
+        self.assertEqual(nexthead.val, 3)
+        self.assertEqual(is_reversed, True)
 
     def test_reverseKGroup(self):
         s = Solution()
+
+        l = self.createList(*range(5))
+        head = s.reverseKGroup(l, 2)
+        self.assertEqual(self.NodeList2List(head), [1, 0, 3, 2, 4])
 
         l = self.createList(*range(1))
         head = s.reverseKGroup(l, 3)
@@ -160,14 +195,10 @@ class TestSolution(unittest.TestCase):
         head = s.reverseKGroup(l, 1)
         self.assertEqual(self.NodeList2List(head), [0, 1, 2, 3])
 
-        l = self.createList(*range(7))
-        head = s.reverseKGroup(l, 2)
-        self.assertEqual(self.NodeList2List(head), [1, 0, 3, 2, 5, 4, 6])
-
         l = self.createList(*range(6))
         head = s.reverseKGroup(l, 2)
         self.assertEqual(self.NodeList2List(head), [1, 0, 3, 2, 5, 4])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
