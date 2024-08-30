@@ -15,7 +15,10 @@ class TreeNode:
 
 class BSTIterator:
     def __init__(self, root: Optional[TreeNode]):
-        self.current = TreeNode()
+        self.current = (
+            TreeNode()
+        )  # 刚初始化之后， current 其实是 head，next 时会依次前进
+
         if root is None:
             return
 
@@ -26,7 +29,7 @@ class BSTIterator:
             tail.right = node
             tail = node
 
-        st = [(0, root)]
+        st: list[tuple[int, TreeNode]] = [(0, root)]
         while st:
             flag, node = st.pop()
             if flag == 0:
