@@ -4,6 +4,20 @@
 https://leetcode.cn/problems/word-search-ii/
 """
 
+from collections import defaultdict
+
+
+class Trie:
+    def __init__(self):
+        self.children = defaultdict(Trie)
+        self.word = ""  # 用于存储完整单词，默认为空
+
+    def insert(self, word):
+        cur = self
+        for c in word:
+            cur = cur.children[c]
+        cur.word = word  # 在末尾节点存储完整的单词
+
 
 class Solution:
     def findWords(self, board: list[list[str]], words: list[str]) -> list[str]:
@@ -16,45 +30,29 @@ class Solution:
                 if c not in all_chars_in_words:
                     row[i] = "#"
 
+        root = Trie()
+        for word in words:
+            root.insert(word)
+
         ans = set()
 
-        def dfs(
-            board: list[list[str]], i: int, j: int, words_idx: list[int], char_idx: int
-        ):
+        def dfs(ti: Trie, i: int, j: int):
             c = board[i][j]
-            next_words_idx = [
-                idx
-                for idx in words_idx
-                if words[idx][char_idx:] and words[idx][char_idx] == c
-            ]
-            if not next_words_idx:
+            if c == "#" or c not in ti.children:
                 return
-            ans.update(
-                [
-                    words[idx]
-                    for idx in next_words_idx
-                    if len(words[idx]) == char_idx + 1
-                ]
-            )
-            next_words_idx = [
-                idx for idx in next_words_idx if len(words[idx]) > char_idx + 1
-            ]
-
+            if ti.children[c].word:
+                ans.add(ti.children[c].word)
+                ti.children[c].word = ""  # 防止重复添加
             for d in ((0, 1), (0, -1), (1, 0), (-1, 0)):
                 x, y = i + d[0], j + d[1]
-                if (
-                    0 <= x < len(board)
-                    and 0 <= y < len(board[0])
-                    and board[x][y] != "#"
-                ):
+                if 0 <= x < len(board) and 0 <= y < len(board[0]):
                     board[i][j] = "#"
-                    dfs(board, x, y, next_words_idx, char_idx + 1)
+                    dfs(ti.children[c], x, y)
                     board[i][j] = c
 
-        # dfs(board, 1, 3, list(range(len(words))), 0)
         for i in range(len(board)):
             for j in range(len(board[0])):
-                dfs(board, i, j, list(range(len(words))), 0)
+                dfs(root, i, j)
         return sorted(list(ans))
 
 
